@@ -37,7 +37,7 @@ class DistrictController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // 
     }
 
     /**
