@@ -1,6 +1,6 @@
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-export default function Districts() {
+export default function Districts({auth}) {
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -16,7 +16,7 @@ export default function Districts() {
         >
 
 
-            <p className="text-sm">Comming Soon....</p>
+      
 
             
         </AuthenticatedLayout>

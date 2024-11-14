@@ -13,7 +13,7 @@ class DistrictController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Auth/Login');
+        return Inertia::render('Place/Districts/Districts');
     }
 
     /**

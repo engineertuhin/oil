@@ -14,13 +14,16 @@ export default function Sidebar() {
             />
 
             {/* Dashboard */}
-            <NavLink label={"Places"} icone="fa-solid fa-location-dot">
+            <NavLink
+                label={"Places"}
+                active={route().current("districts.index")}
+                icone="fa-solid fa-location-dot"
+            >
                 <NavChild
                     lable="Districts"
                     routePath={"districts.index"}
-                    active={route().current("brand.index")}
+                    active={route().current("districts.index")}
                 />
-
             </NavLink>
         </ul>
     );
