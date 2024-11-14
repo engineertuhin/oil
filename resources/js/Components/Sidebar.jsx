@@ -17,7 +17,7 @@ export default function Sidebar() {
             <NavLink label={"Places"} icone="fa-solid fa-location-dot">
                 <NavChild
                     lable="Districts"
-                    route={"districts"}
+                    routePath={"districts.index"}
                     active={route().current("brand.index")}
                 />
 
