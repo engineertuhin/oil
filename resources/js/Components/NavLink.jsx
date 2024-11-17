@@ -2,7 +2,7 @@ import { Link } from "@inertiajs/react";
 
 export default function NavLink({
     active = false,
-    icone = "",
+    icon = "",
     label,
     arrow = false,
     children,
@@ -14,7 +14,7 @@ export default function NavLink({
             {children ? (
                 <li className="text-sm font-medium px-4 space-y-1 ">
                     <div className={`dropdown-trigger active-trigger flex items-center gap-2 py-1.5 px-3 cursor-pointer rounded-md hover:bg-blue-50 hover:text-blue-400 transition-colors  ${active ? "sidebar-nav-active" : ""}`}>
-                        <i className={`${icone}`} />
+                        <i className={`${icon}`} />
                         <h1 className="hideable">{label}</h1>
                         <i className="dropdown-icon hideable fa-solid fa-angle-down ml-auto rotate-0 transition-transform inline-block" />
                     </div>
@@ -32,7 +32,7 @@ export default function NavLink({
                                 active ? "sidebar-nav-active" : ""
                             }`}
                         >
-                            <i className={`${icone}`} />
+                            <i className={`${icon}`} />
                             <h1 className="hideable">{label}</h1>
                         </div>
                     </li>

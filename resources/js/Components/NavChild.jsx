@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
 import React from "react";
 
-function NavChild({ lable = "", routePath  = false, url = false, active = false }) {
+function NavChild({ label = "", routePath  = false, url = false, active = false }) {
     return (
         <li>
             <Link
@@ -11,7 +11,7 @@ function NavChild({ lable = "", routePath  = false, url = false, active = false 
                 }`}
             >
                 {" "}
-                {lable}
+                {label}
             </Link>
         </li>
     );
