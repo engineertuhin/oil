@@ -18,4 +18,14 @@
     }
 }
 
+.p-datatable-header{
+  background-color: transparent;
+  border: none;
+}
+/* .p-datatable-table{
+  padding: 30px;
+} */
+.p-datatable-thead {
+padding: 30px;
+}
 

@@ -3,20 +3,24 @@
 namespace App\Http\Controllers\Places;
 
 use App\Http\Controllers\Controller;
+use App\Models\Areas;
 use App\Models\Districts;
+use App\Models\Upazila;
 use App\Service\Districts\DistrictsService;
+use App\Service\Upazila\UpazilaService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class DistrictController extends Controller
+class UpazilaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $initialData = Districts::orderByDesc('id')->get();
-        return Inertia::render('Place/Districts/Districts',compact('initialData'));
+        $getData = Upazila::orderByDesc('id')->get();
+        $areas = Areas::orderByDesc('id')->get();
+        return Inertia::render('Place/Upazila/Upazila',compact('getData','areas'));
     }
 
 
@@ -27,8 +31,8 @@ class DistrictController extends Controller
     public function store(Request $request)
     {
 
-        DistrictsService::store(filterRequest());
-        $getData = Districts::orderByDesc('id')->get();
+        UpazilaService::store(filterRequest());
+        $getData = Upazila::orderByDesc('id')->get();
         return response()->json(['message' => 'Operation success', 'data'=> $getData]);
     }
 
@@ -61,8 +65,8 @@ class DistrictController extends Controller
      */
     public function destroy(string $id)
     {
-        Districts::find($id)->delete();
-        $getData = Districts::orderByDesc('id')->get();
+        Upazila::find($id)->delete();
+        $getData = Upazila::orderByDesc('id')->get();
         return response()->json(['message' => 'Operation success', 'data'=> $getData]);
     }
 }

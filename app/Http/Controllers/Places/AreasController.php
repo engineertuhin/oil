@@ -3,20 +3,22 @@
 namespace App\Http\Controllers\Places;
 
 use App\Http\Controllers\Controller;
+use App\Models\Areas;
 use App\Models\Districts;
-use App\Service\Districts\DistrictsService;
+use App\Service\Areas\AreasService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class DistrictController extends Controller
+class AreasController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $initialData = Districts::orderByDesc('id')->get();
-        return Inertia::render('Place/Districts/Districts',compact('initialData'));
+        $getData = Areas::orderByDesc('id')->get();
+        $districs = Districts::orderByDesc('id')->get();
+        return Inertia::render('Place/Areas/Areas',compact('getData','districs'));
     }
 
 
@@ -27,8 +29,8 @@ class DistrictController extends Controller
     public function store(Request $request)
     {
 
-        DistrictsService::store(filterRequest());
-        $getData = Districts::orderByDesc('id')->get();
+        AreasService::store(filterRequest());
+        $getData = Areas::orderByDesc('id')->get();
         return response()->json(['message' => 'Operation success', 'data'=> $getData]);
     }
 
@@ -61,8 +63,8 @@ class DistrictController extends Controller
      */
     public function destroy(string $id)
     {
-        Districts::find($id)->delete();
-        $getData = Districts::orderByDesc('id')->get();
+        Areas::find($id)->delete();
+        $getData = Areas::orderByDesc('id')->get();
         return response()->json(['message' => 'Operation success', 'data'=> $getData]);
     }
 }

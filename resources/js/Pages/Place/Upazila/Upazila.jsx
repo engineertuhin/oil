@@ -9,16 +9,13 @@ import { useForm, Controller } from "react-hook-form";
 import { classNames } from "primereact/utils";
 import axios from "axios";
 import { Button } from "primereact/button";
-import { useDistricts } from "@/Hooks/useDistricts";
-import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
-
-export default function Districts({ auth, initialData }) {
+import { Dropdown } from "primereact/dropdown";
+export default function Upazila({ auth, getData, areas }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
-    const { districts, handleSave, handleDelete } = useDistricts(
-        initialData,
-        toast
-    );
+    const [datas, setData] = useState(getData);
+    const [areaList, setareas] = useState(areas);
+
     const {
         control,
         formState: { errors },
@@ -28,9 +25,18 @@ export default function Districts({ auth, initialData }) {
         name: "",
         code: "",
         id: "",
+        area_id: "",
     });
 
-    // Active button
+    const getFormErrorMessage = (name) => {
+        return (
+            errors[name] && (
+                <small className="p-error">{errors[name].message}</small>
+            )
+        );
+    };
+
+    // Active buttion
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
@@ -42,6 +48,7 @@ export default function Districts({ auth, initialData }) {
                             name: rowData.name,
                             code: rowData.code,
                             id: rowData.id,
+                            area_id: rowData.area_id,
                         });
                         setModel(true);
                     }}
@@ -57,21 +64,39 @@ export default function Districts({ auth, initialData }) {
         );
     };
     // Delete
-    const dataDelete = async (id) => {
+    const dataDelete = (id) => {
         if (!confirm("Are you sure you want to delete this?")) return;
-        await handleDelete(id);
+
+        axios.delete(route("upazila.destroy", id)).then((res) => {
+            setData(res.data.data);
+            toast.current.show({
+                severity: "info",
+                summary: "Confirmed",
+                detail: res.data.message,
+                life: 3000,
+            });
+        });
     };
 
     // Insert or Update
-    const onSubmit = async (data) => {
-        await handleSave(data);
-        if (!data.id) {
-            reset({
-                name: "",
-                code: "",
-                id: "",
+    const onSubmit = (data) => {
+        axios.post(route("upazila.store"), data).then((res) => {
+            setData(res.data.data);
+            if (!data.id) {
+                reset({
+                    name: "",
+                    code: "",
+                    id: "",
+                    area_id: "",
+                });
+            }
+            toast.current.show({
+                severity: "info",
+                summary: "Confirmed",
+                detail: res.data.message,
+                life: 3000,
             });
-        }
+        });
     };
 
     return (
@@ -79,10 +104,10 @@ export default function Districts({ auth, initialData }) {
             user={auth.user}
             header={
                 <>
-                    <h2 className="text-skin-header font-medium ">Districts</h2>{" "}
+                    <h2 className="text-skin-header font-medium ">Upazila</h2>{" "}
                     <p className="text-skin-sub-header text-xs">
                         {" "}
-                        Home - Districts
+                        Home - Upazila
                     </p>
                 </>
             }
@@ -94,8 +119,8 @@ export default function Districts({ auth, initialData }) {
                 />
                 <div className="card">
                     <DataTable
-                        data={districts}
-                        addbuttom="Add District"
+                        data={datas}
+                        addbuttom="Add Upazila"
                         model={setModel}
                     >
                         <Column
@@ -134,12 +159,13 @@ export default function Districts({ auth, initialData }) {
                     breakpoints={{ "960px": "75vw", "641px": "90vw" }}
                     model={model}
                     setModel={setModel}
-                    title="Districts Add"
+                    title="Upazila Add"
                     resetData={() => {
                         reset({
                             name: "",
                             code: "",
                             id: "",
+                            area_id: "",
                         });
                     }}
                 >
@@ -178,7 +204,7 @@ export default function Districts({ auth, initialData }) {
                                         Name*
                                     </label>
                                 </span>
-                                {getFormErrorMessage(errors, "name")}
+                                {getFormErrorMessage("name")}
                             </div>
                             <div className="field">
                                 <span className="p-float-label">
@@ -209,7 +235,39 @@ export default function Districts({ auth, initialData }) {
                                         Code*
                                     </label>
                                 </span>
-                                {getFormErrorMessage(errors, "code")}
+                                {getFormErrorMessage("code")}
+                            </div>
+                            <div className="field">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="area_id"
+                                        control={control}
+                                        rules={{
+                                            required: "Area is required.",
+                                        }}
+                                        render={({ field, fieldState }) => (
+                                            <Dropdown
+                                                options={areaList}
+                                                {...field}
+                                                optionLabel="name"
+                                                optionValue="id"
+                                                filter
+                                                showClear
+                                                filterBy="name"
+                                                placeholder="Select a Area"
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="area"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        Area*
+                                    </label>
+                                </span>
+                                {getFormErrorMessage("area")}
                             </div>
                         </div>
                     </form>
