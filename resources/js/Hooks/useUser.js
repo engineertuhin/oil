@@ -1,8 +1,14 @@
-import { saveUser,deleteUser } from "@/Services/userService";
-import { useState, } from "react";
+import { saveUser, deleteUser } from "@/Services/userService";
+import { useState } from "react";
+import { getAreaService, getUpazilaService } from "@/Services/getPlaceService";
 
 export const useUser = (initialData, toast) => {
     const [user, setUser] = useState(initialData);
+    const [gender, setGender] = useState(initialData.gender);
+    const [designation, setDesignation] = useState(initialData.designation);
+    const [district, setDistrict] = useState(initialData.district);
+    const [area, setArea] = useState([]);
+    const [upazila, setUpazila] = useState([]);
 
     const handleSave = async (data) => {
         const res = await saveUser(data);
@@ -26,5 +32,26 @@ export const useUser = (initialData, toast) => {
         });
     };
 
-    return { user, handleSave, handleDelete, toast };
+    const getArea = async (id) => {
+        const res = await getAreaService(id);
+        setArea(res);
+    };
+    const getUpazila = async (id) => {
+        const res = await getUpazilaService(id);
+        setUpazila(res);
+    };
+
+    return {
+        user,
+        gender,
+        designation,
+        district,
+        getArea,
+        area,
+        getUpazila,
+        upazila,
+        handleSave,
+        handleDelete,
+        toast,
+    };
 };

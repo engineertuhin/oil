@@ -16,13 +16,13 @@ export default function Sidebar() {
             {/* Place Section */}
             <NavLink
                 label={"Places"}
-                active={route().current("user.index") || route().current("areas.index") || route().current("upazila.index")}
+                active={route().current("districts.index") || route().current("areas.index") || route().current("upazila.index")}
                 icon="fa-solid fa-location-dot"
             >
                 <NavChild
-                    label="User"
-                    routePath={"user.index"}
-                    active={route().current("user.index")}
+                    label="Districts"
+                    routePath={"districts.index"}
+                    active={route().current("districts.index")}
                 />
                  <NavChild
                     label="Areas"

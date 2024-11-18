@@ -11,14 +11,25 @@ import axios from "axios";
 import { Button } from "primereact/button";
 import { useUser } from "@/Hooks/useUser";
 import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
+import { Calendar } from "primereact/calendar";
+import { Dropdown } from "primereact/dropdown";
+import { FileUpload } from "primereact/fileupload";
 
 export default function User({ auth, initialData }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
-    const { User, handleSave, handleDelete } = useUser(
-        initialData,
-        toast
-    );
+    const {
+        User,
+        gender,
+        designation,
+        district,
+        getArea,
+        area,
+        getUpazila,
+        upazila,
+        handleSave,
+        handleDelete,
+    } = useUser(initialData, toast);
     const {
         control,
         formState: { errors },
@@ -80,10 +91,7 @@ export default function User({ auth, initialData }) {
             header={
                 <>
                     <h2 className="text-skin-header font-medium ">User</h2>{" "}
-                    <p className="text-skin-sub-header text-xs">
-                        {" "}
-                        Home - User
-                    </p>
+                    <p className="text-skin-sub-header text-xs"> Home - User</p>
                 </>
             }
         >
@@ -130,7 +138,7 @@ export default function User({ auth, initialData }) {
                 </div>
 
                 <Model
-                    style={{ width: "32rem" }}
+                    style={{ width: "62rem" }}
                     breakpoints={{ "960px": "75vw", "641px": "90vw" }}
                     model={model}
                     setModel={setModel}
@@ -148,8 +156,8 @@ export default function User({ auth, initialData }) {
                         onSubmit={handleSubmit(onSubmit)}
                         className="p-fluid"
                     >
-                        <div className="mt-5 space-y-7">
-                            <div className="field">
+                        <div className="mt-5  grid grid-cols-12  gap-6">
+                            <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
                                         name="name"
@@ -180,13 +188,13 @@ export default function User({ auth, initialData }) {
                                 </span>
                                 {getFormErrorMessage(errors, "name")}
                             </div>
-                            <div className="field">
+                            <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
-                                        name="code"
+                                        name="email"
                                         control={control}
                                         rules={{
-                                            required: "Code is required.",
+                                            required: "Email is required.",
                                         }}
                                         render={({ field, fieldState }) => (
                                             <InputText
@@ -201,15 +209,316 @@ export default function User({ auth, initialData }) {
                                         )}
                                     />
                                     <label
-                                        htmlFor="code"
+                                        htmlFor="email"
                                         className={classNames({
                                             "p-error": errors.name,
                                         })}
                                     >
-                                        Code*
+                                        Email*
                                     </label>
                                 </span>
-                                {getFormErrorMessage(errors, "code")}
+                                {getFormErrorMessage(errors, "email")}
+                            </div>
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="password"
+                                        rules={{
+                                            required: "Password is required.",
+                                            min: {
+                                                value : 4,
+                                                message: 'Minimum need 4 character'
+                                            }
+                                        }}
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <InputText
+                                                id={field.name}
+                                                {...field}
+                                                className={classNames({
+                                                    "p-invalid":
+                                                        fieldState.invalid,
+                                                })}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="password"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        Password
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "password")}
+                            </div>
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="nid"
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <InputText
+                                                id={field.name}
+                                                {...field}
+                                                className={classNames({
+                                                    "p-invalid":
+                                                        fieldState.invalid,
+                                                })}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="nid"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        NID
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "nid")}
+                            </div>
+                        
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="date_of_birth"
+                                        control={control}
+                                        rules={{
+                                            required:
+                                                "Date of Birth is required.",
+                                        }}
+                                        render={({ field, fieldState }) => (
+                                            <Calendar
+                                                id={field.name}
+                                                {...field}
+                                                className={classNames({
+                                                    "p-invalid":
+                                                        fieldState.invalid,
+                                                })}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="date_of_birth"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        Date of Birth *
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "date_of_birth")}
+                            </div>
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="join_date"
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <Calendar
+                                                id={field.name}
+                                                {...field}
+                                                className={classNames({
+                                                    "p-invalid":
+                                                        fieldState.invalid,
+                                                })}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="join_date"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        Join Date
+                                    </label>
+                                </span>
+                             
+                            </div>
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="gender"
+                                        control={control}
+                                        rules={{
+                                            required: "Gender is required.",
+                                        }}
+                                        render={({ field, fieldState }) => (
+                                            <Dropdown
+                                                options={gender}
+                                                {...field}
+                                                optionLabel="name"
+                                                filter
+                                                showClear
+                                                filterBy="name"
+                                                placeholder="Select a Gender"
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="districts"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        Gender*
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors,"gender")}
+                            </div>
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="designation"
+                                        control={control}
+                                        rules={{
+                                            required:
+                                                "Designation is required.",
+                                        }}
+                                        render={({ field, fieldState }) => (
+                                            <Dropdown
+                                                options={designation}
+                                                {...field}
+                                                optionLabel="name"
+                                                filter
+                                                showClear
+                                                filterBy="name"
+                                                placeholder="Select a Designation"
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="designation"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        Designation*
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors,"designation")}
+                            </div>
+
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="district_id"
+                                        control={control}
+                                        rules={{
+                                            required: "Districts is required.",
+                                        }}
+                                        render={({ field, fieldState }) => (
+                                            <Dropdown
+                                                options={district}
+                                                value={field.value}
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                    getArea(e.value);
+                                                }}
+                                                optionLabel="name"
+                                                optionValue="id"
+                                                filter
+                                                showClear
+                                                filterBy="name"
+                                                placeholder="Select a District"
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="district_id"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        District
+                                    </label>
+                                </span>
+                                {getFormErrorMessage("district_id")}
+                            </div>
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="area_id"
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <Dropdown
+                                                options={area}
+                                                value={field.value}
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                    getUpazila(e.value);
+                                                }}
+                                                optionLabel="name"
+                                                filter
+                                                showClear
+                                                filterBy="name"
+                                                placeholder="Select a Districts"
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="area_id"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        Area
+                                    </label>
+                                </span>
+                                {getFormErrorMessage("area_id")}
+                            </div>
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="upazila_id"
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <Dropdown
+                                                options={upazila}
+                                                {...field}
+                                                optionLabel="name"
+                                                optionValue="id"
+                                                filter
+                                                showClear
+                                                filterBy="name"
+                                                placeholder="Select a Upazila"
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="upazila_id"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        Upazila
+                                    </label>
+                                </span>
+                                {getFormErrorMessage("upazila_id")}
+                            </div>
+
+                            <div className="col-span-4 flex items-center  ">
+                                <Controller
+                                    name="profile_picture"
+                                    control={control}
+                                    rules={{
+                                        required: "Email is required.",
+                                    }}
+                                    render={({ field, fieldState }) => (
+                                        <input
+                                            className=" w-full"
+                                            type="file"
+                                            id={field.name}
+                                            {...field}
+                                            
+                                           
+                                        />
+                                    )}
+                                />
                             </div>
                         </div>
                     </form>

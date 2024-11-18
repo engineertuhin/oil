@@ -9,3 +9,4 @@ export const deleteUser = async (id) => {
     const response = await axios.delete(route("user.destroy", id));
     return response.data;
 };
+
