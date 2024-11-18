@@ -13,14 +13,19 @@ return new class extends Migration
     {
         Schema::create('designations', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('district_id')->nullable()->comment('nullable');
             $table->unsignedBigInteger('upazila_id')->nullable()->comment('nullable');
             $table->unsignedBigInteger('area_id')->nullable()->comment('nullable');
-            $table->unsignedBigInteger('user_id')->nullable()->comment('nullable');
-            $table->string('title');
-            $table->integer('level');
+            $table->integer('nid')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->string('gender')->nullable();
+            $table->date('join_date')->nullable();
+            $table->string('designation');
+            $table->integer('level')->nullable();
             $table->boolean('is_active')->default(1)->comment('0: inactive, 1: active');
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

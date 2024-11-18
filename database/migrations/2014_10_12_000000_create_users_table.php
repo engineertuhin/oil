@@ -16,12 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('profile_picture')->nullable();
-            $table->integer('nid')->nullable();
-            $table->date('date_of_birth')->nullable();
-            $table->string('gender')->nullable();
-            $table->date('join_date')->nullable();
             $table->integer('role')->nullable();
             $table->integer('is_active')->default(0);
             $table->string('last_login_at')->nullable();

@@ -7,19 +7,17 @@ import Model from "@/Components/Model";
 import { InputText } from "primereact/inputtext";
 import { useForm, Controller } from "react-hook-form";
 import { classNames } from "primereact/utils";
-import axios from "axios";
 import { Button } from "primereact/button";
 import { useUser } from "@/Hooks/useUser";
 import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
-import { FileUpload } from "primereact/fileupload";
 
 export default function User({ auth, initialData }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
     const {
-        User,
+        user,
         gender,
         designation,
         district,
@@ -35,11 +33,7 @@ export default function User({ auth, initialData }) {
         formState: { errors },
         handleSubmit,
         reset,
-    } = useForm({
-        name: "",
-        code: "",
-        id: "",
-    });
+    } = useForm({});
 
     // Active button
     const actionBodyTemplate = (rowData) => {
@@ -49,11 +43,24 @@ export default function User({ auth, initialData }) {
                     icon="pi pi-pencil "
                     className="p-button-rounded  mr-2 p-button-sm h-10 w-10"
                     onClick={() => {
+                        getArea(rowData?.designation?.district_id);
+                        getUpazila(rowData?.designation?.area_id);
                         reset({
-                            name: rowData.name,
-                            code: rowData.code,
-                            id: rowData.id,
+                            name: rowData.name || "",     
+                            code: rowData.code || "",     
+                            id: rowData.id || "",         
+                            email: rowData.email || "",  
+                            password: rowData.password || "", 
+                            nid: rowData.designation.nid || "",     
+                            date_of_birth: new Date(rowData.designation.date_of_birth) || "", 
+                            join_date:  new Date(rowData.designation.date_of_birth) || "", 
+                            gender: rowData.designation.gender || "",  
+                            designation: rowData.designation.designation || "", 
+                            district_id: rowData.designation.district_id || "", 
+                            area_id: Number(rowData.designation.area_id) || "", 
+                            upazila_id: rowData.designation.upazila_id || "", 
                         });
+
                         setModel(true);
                     }}
                 />
@@ -75,12 +82,27 @@ export default function User({ auth, initialData }) {
 
     // Insert or Update
     const onSubmit = async (data) => {
-        await handleSave(data);
+        const formData = new FormData();
+        for (const key in data) {
+            formData.append(key, data[key]);
+        }
+
+        await handleSave(formData);
         if (!data.id) {
             reset({
-                name: "",
-                code: "",
-                id: "",
+                name: "",     
+                code:  "",     
+                id:"",         
+                email: "",  
+                password:"", 
+                nid: "",     
+                date_of_birth: "", 
+                join_date:  "", 
+                gender: "",  
+                designation: "", 
+                district_id:  "", 
+                area_id:  "", 
+                upazila_id:  "", 
             });
         }
     };
@@ -102,7 +124,7 @@ export default function User({ auth, initialData }) {
                 />
                 <div className="card">
                     <DataTable
-                        data={User}
+                        data={user}
                         addbuttom="Add User"
                         model={setModel}
                     >
@@ -112,10 +134,10 @@ export default function User({ auth, initialData }) {
                             alignHeader="center"
                             style={{ width: "14rem" }}
                         ></Column>
-                        <Column
-                            field="code"
+                         <Column
+                            field="designation.designation"
                             alignHeader="center"
-                            header="Code"
+                            header="Designation"
                             bodyClassName="text-center"
                             style={{ width: "14rem" }}
                         ></Column>
@@ -224,11 +246,12 @@ export default function User({ auth, initialData }) {
                                     <Controller
                                         name="password"
                                         rules={{
-                                            required: "Password is required.",
+                                         
                                             min: {
-                                                value : 4,
-                                                message: 'Minimum need 4 character'
-                                            }
+                                                value: 4,
+                                                message:
+                                                    "Minimum need 4 character",
+                                            },
                                         }}
                                         control={control}
                                         render={({ field, fieldState }) => (
@@ -280,7 +303,7 @@ export default function User({ auth, initialData }) {
                                 </span>
                                 {getFormErrorMessage(errors, "nid")}
                             </div>
-                        
+
                             <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
@@ -337,7 +360,6 @@ export default function User({ auth, initialData }) {
                                         Join Date
                                     </label>
                                 </span>
-                             
                             </div>
                             <div className="field col-span-4">
                                 <span className="p-float-label">
@@ -368,7 +390,7 @@ export default function User({ auth, initialData }) {
                                         Gender*
                                     </label>
                                 </span>
-                                {getFormErrorMessage(errors,"gender")}
+                                {getFormErrorMessage(errors, "gender")}
                             </div>
                             <div className="field col-span-4">
                                 <span className="p-float-label">
@@ -400,7 +422,7 @@ export default function User({ auth, initialData }) {
                                         Designation*
                                     </label>
                                 </span>
-                                {getFormErrorMessage(errors,"designation")}
+                                {getFormErrorMessage(errors, "designation")}
                             </div>
 
                             <div className="field col-span-4">
@@ -453,6 +475,7 @@ export default function User({ auth, initialData }) {
                                                     getUpazila(e.value);
                                                 }}
                                                 optionLabel="name"
+                                                optionValue="id"
                                                 filter
                                                 showClear
                                                 filterBy="name"
@@ -505,17 +528,16 @@ export default function User({ auth, initialData }) {
                                 <Controller
                                     name="profile_picture"
                                     control={control}
-                                    rules={{
-                                        required: "Email is required.",
-                                    }}
+                                  
                                     render={({ field, fieldState }) => (
                                         <input
                                             className=" w-full"
                                             type="file"
-                                            id={field.name}
-                                            {...field}
-                                            
-                                           
+                                            id={field.value}
+                                            onChange={(e) => {
+                                                const file = e.target.files[0];
+                                                field.onChange(file);
+                                            }}
                                         />
                                     )}
                                 />

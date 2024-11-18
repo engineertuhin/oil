@@ -3,7 +3,7 @@ import { useState } from "react";
 import { getAreaService, getUpazilaService } from "@/Services/getPlaceService";
 
 export const useUser = (initialData, toast) => {
-    const [user, setUser] = useState(initialData);
+    const [user, setUser] = useState(initialData.data);
     const [gender, setGender] = useState(initialData.gender);
     const [designation, setDesignation] = useState(initialData.designation);
     const [district, setDistrict] = useState(initialData.district);
@@ -13,6 +13,7 @@ export const useUser = (initialData, toast) => {
     const handleSave = async (data) => {
         const res = await saveUser(data);
         setUser(res.data);
+    
         toast.current.show({
             severity: "info",
             summary: "Confirmed",

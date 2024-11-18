@@ -4,8 +4,11 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Districts;
+use App\Models\User;
+use App\Service\Users\UserService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+
 class UserController extends Controller
 {
     /**
@@ -16,6 +19,8 @@ class UserController extends Controller
         $initialData['designation'] = designation();
         $initialData['gender'] = gender();
         $initialData['district'] = Districts::get();
+        $initialData['data'] = User::whereNot('role', null)->with('designation')->get();
+
         return Inertia::render('User/User', compact('initialData'));
     }
 
@@ -32,7 +37,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        UserService::useStore(request()->all());
+
+        return response()->json(['message' => 'Operation success', 'data' => User::whereNot('role', null)->with('designation')->get()]);
     }
 
     /**

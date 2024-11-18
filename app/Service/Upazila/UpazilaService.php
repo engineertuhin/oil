@@ -12,10 +12,9 @@ class UpazilaService
     {
         $data = collect($data);
 
-    Upazila::updateOrCreate(
-        ['id' => $data->get('id')], // Match on `id` if provided
-        $data->only(['name', 'code', 'area_id'])->toArray() // Fields to update/insert
-    );
-        
+        Upazila::updateOrCreate(
+            ['id' => $data->get('id')], // Match on `id` if provided
+            $data->only(['name', 'code', 'area_id'])->toArray() // Fields to update/insert
+        );
     }
 }
