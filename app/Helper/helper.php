@@ -24,6 +24,12 @@ if (!function_exists("designation")) {
         return  ['DGM', 'HOS', 'Are Manager', 'Sr JR Executive'];
     }
 }
+if (!function_exists("clientDesignation")) {
+    function clientDesignation()
+    {
+        return  ['Client', 'Retailer'];
+    }
+}
 
 
 if (!function_exists("fileWithDataProcess")) {
@@ -38,7 +44,7 @@ if (!function_exists("fileWithDataProcess")) {
             $hashedName = md5($imageName);
             $hashedImageName = $hashedName . '.' . $imageExtension;
             $encrypted = $hashedImageName;
-            // $imagePath->move(public_path('images'), $encrypted);
+            $imagePath->move(public_path('images'), $encrypted);
             $prepared = $collect->except($column)->merge([$column => $encrypted]);
             if ($oldName) {
                 if (file_exists('images/' . $oldName)) {

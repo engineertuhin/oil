@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 class UserService
 {
 
-    public static function useStore($data)
+    public static function userStore($data)
     {
         DB::transaction(function () use ($data) {
             $prepared = fileWithDataProcess($data, false, 'profile_picture');
@@ -24,7 +24,7 @@ class UserService
             );
             $user->designation()->updateOrCreate(
                 ['user_id' => $user->id],
-                $prepared->except($onlyUserTable)->except('code', 'id')->toArray()
+                $prepared->except($onlyUserTable)->except( 'id')->toArray()
             );
         });
     }

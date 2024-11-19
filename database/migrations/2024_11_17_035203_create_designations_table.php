@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->date('join_date')->nullable();
             $table->string('designation');
+            $table->string('code')->nullable();
             $table->integer('level')->nullable();
             $table->boolean('is_active')->default(1)->comment('0: inactive, 1: active');
             $table->timestamps();

@@ -1,27 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\Districts;
 use App\Models\User;
-use App\Service\Users\UserService;
+use App\Service\Client\ClientService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class UserController extends Controller
+class ClientController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $initialData['designation'] = designation();
+        $initialData['designation'] = clientDesignation();
         $initialData['gender'] = gender();
         $initialData['district'] = Districts::get();
-        $initialData['data'] = User::whereNot('role', null)->with('designation')->get();
+        $initialData['data'] = Client::orderByDesc('id')->get();
 
-        return Inertia::render('User/User', compact('initialData'));
+        return Inertia::render('Client/Client', compact('initialData'));
     }
 
     /**
@@ -37,9 +38,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        UserService::userStore(filterRequest());
-
-        return response()->json(['message' => 'Operation success', 'data' => User::whereNot('role', null)->with('designation')->get()]);
+        ClientService::useStore(filterRequest());
+        return response()->json(['message' => 'Operation success', 'data' =>  Client::orderByDesc('id')->get()]);
     }
 
     /**
@@ -71,10 +71,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-     $user=User::find($id);
+     $user=Client::find($id);
      fileWithDataProcess($user,$user->profile_picture,'profile_picture');
      $user->delete();
-     return response()->json(['message' => 'Operation success', 'data' => User::whereNot('role', null)->with('designation')->get()]);
+     return response()->json(['message' => 'Operation success', 'data' => Client::orderByDesc('id')->get()]);
 
     }
 }

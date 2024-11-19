@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Places\AreasController;
 use App\Http\Controllers\Places\DistrictController;
 use App\Http\Controllers\Places\PlaceController;
@@ -20,6 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('areas', AreasController::class);
     Route::resource('upazila', UpazilaController::class);
     Route::resource('user', UserController::class);
+    Route::resource('client', ClientController::class);
 
 
     Route::post('get/area/{id}', [PlaceController::class, 'areaGet'])->name('getArea');

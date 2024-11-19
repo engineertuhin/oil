@@ -16,7 +16,11 @@ export default function Sidebar() {
             {/* Place Section */}
             <NavLink
                 label={"Places"}
-                active={route().current("districts.index") || route().current("areas.index") || route().current("upazila.index")}
+                active={
+                    route().current("districts.index") ||
+                    route().current("areas.index") ||
+                    route().current("upazila.index")
+                }
                 icon="fa-solid fa-location-dot"
             >
                 <NavChild
@@ -24,19 +28,19 @@ export default function Sidebar() {
                     routePath={"districts.index"}
                     active={route().current("districts.index")}
                 />
-                 <NavChild
+                <NavChild
                     label="Areas"
                     routePath={"areas.index"}
                     active={route().current("areas.index")}
                 />
-                 <NavChild
+                <NavChild
                     label="Upazila"
                     routePath={"upazila.index"}
                     active={route().current("upazila.index")}
                 />
             </NavLink>
-          {/* Place Section */}
-          <NavLink
+            {/* Place Section */}
+            <NavLink
                 label={"Users"}
                 active={route().current("user.index")}
                 icon="fa-solid fa-user-plus"
@@ -46,7 +50,17 @@ export default function Sidebar() {
                     routePath={"user.index"}
                     active={route().current("user.index")}
                 />
-             
+            </NavLink>
+            <NavLink
+                label={"Client"}
+                active={route().current("client.index")}
+                icon="fa-solid fa-user-group"
+            >
+                <NavChild
+                    label="Client"
+                    routePath={"client.index"}
+                    active={route().current("client.index")}
+                />
             </NavLink>
         </ul>
     );

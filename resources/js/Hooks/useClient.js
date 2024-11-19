@@ -1,20 +1,19 @@
-import { saveUser, deleteUser } from "@/Services/userService";
 import { useState } from "react";
 import { getAreaService, getUpazilaService } from "@/Services/getPlaceService";
+import { saveUser, deleteUser } from "@/Services/clientService";
 
-export const useUser = (initialData, toast) => {
-    const [user, setUser] = useState(initialData.data);
+export const useClient = (initialData, toast) => {
+    const [client, setClient] = useState(initialData.data);
     const [gender, setGender] = useState(initialData.gender);
-    const [designation, setDesignation] = useState(initialData.designation);
+    const [type, setType] = useState(initialData.designation);
     const [district, setDistrict] = useState(initialData.district);
     const [area, setArea] = useState([]);
     const [upazila, setUpazila] = useState([]);
 
     const handleSave = async (data) => {
         const res = await saveUser(data);
-        setUser(res.data);
-        console.log(res);
-        
+        setClient(res.data);
+
         toast.current.show({
             severity: "info",
             summary: "Confirmed",
@@ -25,7 +24,7 @@ export const useUser = (initialData, toast) => {
 
     const handleDelete = async (id) => {
         const res = await deleteUser(id);
-        setUser(res.data);
+        setClient(res.data);
         toast.current.show({
             severity: "info",
             summary: "Confirmed",
@@ -44,9 +43,9 @@ export const useUser = (initialData, toast) => {
     };
 
     return {
-        user,
+        client,
         gender,
-        designation,
+        type,
         district,
         getArea,
         area,

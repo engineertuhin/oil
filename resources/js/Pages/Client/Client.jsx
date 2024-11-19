@@ -8,19 +8,19 @@ import { InputText } from "primereact/inputtext";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { classNames } from "primereact/utils";
 import { Button } from "primereact/button";
-import { useUser } from "@/Hooks/useUser";
+import { useClient } from "@/Hooks/useClient";
 import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 
-export default function User({ auth, initialData }) {
+export default function Client({ auth, initialData }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
     const [preview, setPreview] = useState(false);
     const {
-        user,
+        client,
         gender,
-        designation,
+        type,
         district,
         getArea,
         area,
@@ -28,7 +28,7 @@ export default function User({ auth, initialData }) {
         upazila,
         handleSave,
         handleDelete,
-    } = useUser(initialData, toast);
+    } = useClient(initialData, toast);
     const {
         control,
         formState: { errors },
@@ -45,26 +45,19 @@ export default function User({ auth, initialData }) {
                     icon="pi pi-pencil "
                     className="p-button-rounded  mr-2 p-button-sm h-10 w-10"
                     onClick={() => {
-                        getArea(rowData?.designation?.district_id);
-                        getUpazila(rowData?.designation?.area_id);
+                        getArea(rowData?.district_id);
+                        getUpazila(rowData?.area_id);
                         reset({
                             name: rowData.name || "",
                             code: rowData.code || "",
+                            number: rowData.number || "",
                             id: rowData.id || "",
-                            email: rowData.email || "",
-                            password: rowData.password || "",
-                            nid: rowData.designation.nid || "",
-                            date_of_birth:
-                                new Date(rowData.designation.date_of_birth) ||
-                                "",
-                            join_date:
-                                new Date(rowData.designation.date_of_birth) ||
-                                "",
-                            gender: rowData.designation.gender || "",
-                            designation: rowData.designation.designation || "",
-                            district_id: rowData.designation.district_id || "",
-                            area_id: Number(rowData.designation.area_id) || "",
-                            upazila_id: rowData.designation.upazila_id || "",
+                            nid: rowData.nid || "",
+                            gender: rowData.gender || "",
+                            type: rowData.type || "",
+                            district_id: rowData.district_id || "",
+                            area_id: Number(rowData.area_id) || "",
+                            upazila_id: rowData.upazila_id || "",
                             profile_picture: rowData.profile_picture || "",
                         });
                         setPreview(false);
@@ -101,13 +94,10 @@ export default function User({ auth, initialData }) {
                 name: "",
                 code: "",
                 id: "",
-                email: "",
-                password: "",
+                number: "",
                 nid: "",
-                date_of_birth: "",
-                join_date: "",
                 gender: "",
-                designation: "",
+                type: "",
                 district_id: "",
                 area_id: "",
                 upazila_id: "",
@@ -121,8 +111,11 @@ export default function User({ auth, initialData }) {
             user={auth.user}
             header={
                 <>
-                    <h2 className="text-skin-header font-medium ">User</h2>{" "}
-                    <p className="text-skin-sub-header text-xs"> Home - User</p>
+                    <h2 className="text-skin-header font-medium ">Client</h2>{" "}
+                    <p className="text-skin-sub-header text-xs">
+                        {" "}
+                        Home - Client
+                    </p>
                 </>
             }
         >
@@ -133,8 +126,8 @@ export default function User({ auth, initialData }) {
                 />
                 <div className="card">
                     <DataTable
-                        data={user}
-                        addbuttom="Add User"
+                        data={client}
+                        addbuttom="Add Client"
                         model={setModel}
                     >
                         <Column
@@ -144,9 +137,9 @@ export default function User({ auth, initialData }) {
                             style={{ width: "14rem" }}
                         ></Column>
                         <Column
-                            field="designation.designation"
+                            field="type"
                             alignHeader="center"
-                            header="Designation"
+                            header="type"
                             bodyClassName="text-center"
                             style={{ width: "14rem" }}
                         ></Column>
@@ -172,19 +165,16 @@ export default function User({ auth, initialData }) {
                     breakpoints={{ "960px": "75vw", "641px": "90vw" }}
                     model={model}
                     setModel={setModel}
-                    title="User Add"
+                    title="Client Add"
                     resetData={() => {
                         reset({
                             name: "",
                             code: "",
                             id: "",
-                            email: "",
-                            password: "",
+                            number: "",
                             nid: "",
-                            date_of_birth: "",
-                            join_date: "",
                             gender: "",
-                            designation: "",
+                            type: "",
                             district_id: "",
                             area_id: "",
                             upazila_id: "",
@@ -294,6 +284,9 @@ export default function User({ auth, initialData }) {
                                     <Controller
                                         name="code"
                                         control={control}
+                                        rules={{
+                                            required: "Code is required.",
+                                        }}
                                         render={({ field, fieldState }) => (
                                             <InputText
                                                 id={field.name}
@@ -317,14 +310,14 @@ export default function User({ auth, initialData }) {
                                 {getFormErrorMessage(errors, "code")}
                             </div>
 
-                            {/* Email Field */}
+                            {/* Number Field */}
                             <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
-                                        name="email"
+                                        name="number"
                                         control={control}
                                         rules={{
-                                            required: "Email is required.",
+                                            required: "Number is required.",
                                         }}
                                         render={({ field, fieldState }) => (
                                             <InputText
@@ -338,51 +331,15 @@ export default function User({ auth, initialData }) {
                                         )}
                                     />
                                     <label
-                                        htmlFor="email"
+                                        htmlFor="number"
                                         className={classNames({
-                                            "p-error": errors.email,
+                                            "p-error": errors.number,
                                         })}
                                     >
-                                        Email*
+                                        Number*
                                     </label>
                                 </span>
-                                {getFormErrorMessage(errors, "email")}
-                            </div>
-
-                            {/* Password Field */}
-                            <div className="field col-span-4">
-                                <span className="p-float-label">
-                                    <Controller
-                                        name="password"
-                                        rules={{
-                                            min: {
-                                                value: 4,
-                                                message:
-                                                    "Minimum need 4 characters",
-                                            },
-                                        }}
-                                        control={control}
-                                        render={({ field, fieldState }) => (
-                                            <InputText
-                                                id={field.name}
-                                                {...field}
-                                                className={classNames({
-                                                    "p-invalid":
-                                                        fieldState.invalid,
-                                                })}
-                                            />
-                                        )}
-                                    />
-                                    <label
-                                        htmlFor="password"
-                                        className={classNames({
-                                            "p-error": errors.password,
-                                        })}
-                                    >
-                                        Password
-                                    </label>
-                                </span>
-                                {getFormErrorMessage(errors, "password")}
+                                {getFormErrorMessage(errors, "number")}
                             </div>
 
                             {/* NID Field */}
@@ -412,68 +369,6 @@ export default function User({ auth, initialData }) {
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "nid")}
-                            </div>
-
-                            {/* Date of Birth Field */}
-                            <div className="field col-span-4">
-                                <span className="p-float-label">
-                                    <Controller
-                                        name="date_of_birth"
-                                        control={control}
-                                        rules={{
-                                            required:
-                                                "Date of Birth is required.",
-                                        }}
-                                        render={({ field, fieldState }) => (
-                                            <Calendar
-                                                id={field.name}
-                                                {...field}
-                                                className={classNames({
-                                                    "p-invalid":
-                                                        fieldState.invalid,
-                                                })}
-                                            />
-                                        )}
-                                    />
-                                    <label
-                                        htmlFor="date_of_birth"
-                                        className={classNames({
-                                            "p-error": errors.date_of_birth,
-                                        })}
-                                    >
-                                        Date of Birth*
-                                    </label>
-                                </span>
-                                {getFormErrorMessage(errors, "date_of_birth")}
-                            </div>
-
-                            {/* Join Date Field */}
-                            <div className="field col-span-4">
-                                <span className="p-float-label">
-                                    <Controller
-                                        name="join_date"
-                                        control={control}
-                                        render={({ field, fieldState }) => (
-                                            <Calendar
-                                                id={field.name}
-                                                {...field}
-                                                className={classNames({
-                                                    "p-invalid":
-                                                        fieldState.invalid,
-                                                })}
-                                            />
-                                        )}
-                                    />
-                                    <label
-                                        htmlFor="join_date"
-                                        className={classNames({
-                                            "p-error": errors.join_date,
-                                        })}
-                                    >
-                                        Join Date
-                                    </label>
-                                </span>
-                                {getFormErrorMessage(errors, "join_date")}
                             </div>
 
                             {/* Gender Field */}
@@ -509,38 +404,37 @@ export default function User({ auth, initialData }) {
                                 {getFormErrorMessage(errors, "gender")}
                             </div>
 
-                            {/* Designation Field */}
+                            {/* type Field */}
                             <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
-                                        name="designation"
+                                        name="type"
                                         control={control}
                                         rules={{
-                                            required:
-                                                "Designation is required.",
+                                            required: "type is required.",
                                         }}
                                         render={({ field, fieldState }) => (
                                             <Dropdown
-                                                options={designation}
+                                                options={type}
                                                 {...field}
                                                 optionLabel="name"
                                                 filter
                                                 showClear
                                                 filterBy="name"
-                                                placeholder="Select a Designation"
+                                                placeholder="Select a type"
                                             />
                                         )}
                                     />
                                     <label
-                                        htmlFor="designation"
+                                        htmlFor="type"
                                         className={classNames({
-                                            "p-error": errors.designation,
+                                            "p-error": errors.type,
                                         })}
                                     >
-                                        Designation*
+                                        Type*
                                     </label>
                                 </span>
-                                {getFormErrorMessage(errors, "designation")}
+                                {getFormErrorMessage(errors, "type")}
                             </div>
 
                             {/* District Field */}
@@ -587,9 +481,6 @@ export default function User({ auth, initialData }) {
                                     <Controller
                                         name="area_id"
                                         control={control}
-                                        rules={{
-                                            required: "Area is required.",
-                                        }}
                                         render={({ field, fieldState }) => (
                                             <Dropdown
                                                 options={area}
@@ -612,7 +503,7 @@ export default function User({ auth, initialData }) {
                                             "p-error": errors.area_id,
                                         })}
                                     >
-                                        Area*
+                                        Area
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "area_id")}
