@@ -7,15 +7,16 @@ import Model from "@/Components/Model";
 import { InputText } from "primereact/inputtext";
 import { useForm, Controller } from "react-hook-form";
 import { classNames } from "primereact/utils";
-import axios from "axios";
+
 import { Button } from "primereact/button";
 import { useDistricts } from "@/Hooks/useDistricts";
+import { Dropdown } from "primereact/dropdown";
 import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
 
 export default function Districts({ auth, initialData }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
-    const { districts, handleSave, handleDelete } = useDistricts(
+    const { districts, handleSave, handleDelete,zone } = useDistricts(
         initialData,
         toast
     );
@@ -41,6 +42,7 @@ export default function Districts({ auth, initialData }) {
                         reset({
                             name: rowData.name,
                             code: rowData.code,
+                            zone_id: Number(rowData.zone_id),
                             id: rowData.id,
                         });
                         setModel(true);
@@ -108,6 +110,13 @@ export default function Districts({ auth, initialData }) {
                             field="code"
                             alignHeader="center"
                             header="Code"
+                            bodyClassName="text-center"
+                            style={{ width: "14rem" }}
+                        ></Column>
+                        <Column
+                            field="zone.name"
+                            alignHeader="center"
+                            header="Zone"
                             bodyClassName="text-center"
                             style={{ width: "14rem" }}
                         ></Column>
@@ -210,6 +219,39 @@ export default function Districts({ auth, initialData }) {
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "code")}
+                            </div>
+
+                            <div className="field">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="zone_id"
+                                        control={control}
+                                        rules={{
+                                            required: "Zone is required.",
+                                        }}
+                                        render={({ field, fieldState }) => (
+                                            <Dropdown
+                                                options={zone}
+                                                {...field}
+                                                optionLabel="name"
+                                                optionValue="id"
+                                                filter
+                                                showClear
+                                                filterBy="name"
+                                                placeholder="Select a Districts"
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="zone_id"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        Zone*
+                                    </label>
+                                </span>
+                                {getFormErrorMessage("zone_id")}
                             </div>
                         </div>
                     </form>

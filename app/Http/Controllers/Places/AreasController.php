@@ -17,9 +17,9 @@ class AreasController extends Controller
      */
     public function index()
     {
-        $getData = Areas::orderByDesc('id')->get();
-        $zone = Zone::orderByDesc('id')->get();
-        return Inertia::render('Place/Areas/Areas',compact('getData','zone'));
+        $getData = Areas::orderByDesc('id')->with('district')->get();
+        $districtList = Districts::orderByDesc('id')->get();
+        return Inertia::render('Place/Areas/Areas',compact('getData','districtList'));
     }
 
 
@@ -31,7 +31,7 @@ class AreasController extends Controller
     {
 
         AreasService::store(filterRequest());
-        $getData = Areas::orderByDesc('id')->get();
+        $getData = Areas::orderByDesc('id')->with('district')->get();
         return response()->json(['message' => 'Operation success', 'data'=> $getData]);
     }
 
@@ -65,7 +65,7 @@ class AreasController extends Controller
     public function destroy(string $id)
     {
         Areas::find($id)->delete();
-        $getData = Areas::orderByDesc('id')->get();
+        $getData = Areas::orderByDesc('id')->with('district')->get();
         return response()->json(['message' => 'Operation success', 'data'=> $getData]);
     }
 }

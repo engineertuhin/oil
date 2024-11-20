@@ -1,8 +1,10 @@
 import { saveDistrict, deleteDistrict } from "@/Services/districtsService";
 import { useState, useRef } from "react";
 
+
 export const useDistricts = (initialData, toast) => {
-    const [districts, setDistricts] = useState(initialData);
+    const [districts, setDistricts] = useState(initialData.districts);
+    const [zone, setZone] = useState(initialData.zone);
 
     const handleSave = async (district) => {
         const res = await saveDistrict(district);
@@ -10,7 +12,7 @@ export const useDistricts = (initialData, toast) => {
         toast.current.show({
             severity: "info",
             summary: "Confirmed",
-            detail: res.data.message,
+            detail: res.message,
             life: 3000,
         });
     };
@@ -26,5 +28,9 @@ export const useDistricts = (initialData, toast) => {
         });
     };
 
-    return { districts, handleSave, handleDelete, toast };
+
+
+
+
+    return { districts, handleSave, handleDelete, toast ,zone};
 };

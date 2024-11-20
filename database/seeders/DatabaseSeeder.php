@@ -22,7 +22,9 @@ class DatabaseSeeder extends Seeder
         
         ]);
         $this->call([
-            // DistrictsTableSeeder::class, 
+            ZonesTableSeeder::class, 
+            DistrictsTableSeeder::class, 
+            AreasTableSeeder::class, 
         ]);
     }
 }

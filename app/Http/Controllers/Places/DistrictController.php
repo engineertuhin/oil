@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Places;
 
 use App\Http\Controllers\Controller;
 use App\Models\Districts;
+use App\Models\Zone;
 use App\Service\Districts\DistrictsService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,8 +16,9 @@ class DistrictController extends Controller
      */
     public function index()
     {
-        $initialData = Districts::orderByDesc('id')->get();
-        return Inertia::render('Place/Districts/Districts',compact('initialData'));
+        $initialData['districts'] = Districts::orderByDesc('id')->with('zone')->get();
+        $initialData['zone'] = Zone::orderByDesc('id')->get();
+        return Inertia::render('Place/Districts/Districts', compact('initialData'));
     }
 
 
@@ -28,8 +30,8 @@ class DistrictController extends Controller
     {
 
         DistrictsService::store(filterRequest());
-        $getData = Districts::orderByDesc('id')->get();
-        return response()->json(['message' => 'Operation success', 'data'=> $getData]);
+        $getData = Districts::orderByDesc('id')->with('zone')->get();
+        return response()->json(['message' => 'Operation success', 'data' => $getData]);
     }
 
     /**
@@ -62,7 +64,7 @@ class DistrictController extends Controller
     public function destroy(string $id)
     {
         Districts::find($id)->delete();
-        $getData = Districts::orderByDesc('id')->get();
-        return response()->json(['message' => 'Operation success', 'data'=> $getData]);
+        $getData = Districts::orderByDesc('id')->with('zone')->get();
+        return response()->json(['message' => 'Operation success', 'data' => $getData]);
     }
 }

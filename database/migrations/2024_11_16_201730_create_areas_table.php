@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('areas', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('zone_id');
+            $table->bigInteger('district_id');
             $table->string('name');
             $table->string('code');
             $table->boolean('is_active')->default(0);
             $table->timestamps();
-            $table->foreign('zone_id')
+            $table->foreign('district_id')
             ->references('id') 
-            ->on('zones')
+            ->on('districts')
             ->onDelete('cascade'); 
         });
 

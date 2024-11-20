@@ -9,4 +9,7 @@ class Areas extends Model
 {
     use HasFactory;
     protected $guarded=[];
+    public function district(){
+        return $this->belongsTo(Districts::class);
+    }
 }
