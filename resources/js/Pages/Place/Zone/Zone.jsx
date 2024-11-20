@@ -12,7 +12,7 @@ import { Button } from "primereact/button";
 export default function Zone({ auth, getData, districts }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
-    const [datas, setData] = useState(getData);
+    const [data, setData] = useState(getData);
 
     const {
         control,
@@ -23,7 +23,6 @@ export default function Zone({ auth, getData, districts }) {
         name: "",
         code: "",
         id: "",
-
     });
 
     const getFormErrorMessage = (name) => {
@@ -46,7 +45,6 @@ export default function Zone({ auth, getData, districts }) {
                             name: rowData.name,
                             code: rowData.code,
                             id: rowData.id,
-                       
                         });
                         setModel(true);
                     }}
@@ -85,7 +83,6 @@ export default function Zone({ auth, getData, districts }) {
                     name: "",
                     code: "",
                     id: "",
-                  
                 });
             }
             toast.current.show({
@@ -103,10 +100,7 @@ export default function Zone({ auth, getData, districts }) {
             header={
                 <>
                     <h2 className="text-skin-header font-medium ">zone</h2>{" "}
-                    <p className="text-skin-sub-header text-xs">
-                        {" "}
-                        Home - zone
-                    </p>
+                    <p className="text-skin-sub-header text-xs"> Home - zone</p>
                 </>
             }
         >
@@ -117,7 +111,7 @@ export default function Zone({ auth, getData, districts }) {
                 />
                 <div className="card">
                     <DataTable
-                        data={datas}
+                        data={data}
                         addbuttom="Add zone"
                         model={setModel}
                     >
@@ -163,7 +157,6 @@ export default function Zone({ auth, getData, districts }) {
                             name: "",
                             code: "",
                             id: "",
-                          
                         });
                     }}
                 >
@@ -235,7 +228,6 @@ export default function Zone({ auth, getData, districts }) {
                                 </span>
                                 {getFormErrorMessage("code")}
                             </div>
-                           
                         </div>
                     </form>
                 </Model>

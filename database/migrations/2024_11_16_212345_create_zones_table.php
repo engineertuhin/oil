@@ -12,20 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('zones', function (Blueprint $table) {
-   
-
             $table->id();
-            $table->bigInteger('district_id');
             $table->string('name');
             $table->string('code');
             $table->boolean('is_active')->default(0);
             $table->timestamps();
-            $table->foreign('district_id')
-            ->references('id') 
-            ->on('districts')
-            ->onDelete('cascade'); 
         });
-
     }
 
     /**
