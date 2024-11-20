@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\EmployHierarchy;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -25,6 +27,7 @@ class DatabaseSeeder extends Seeder
             ZonesTableSeeder::class, 
             DistrictsTableSeeder::class, 
             AreasTableSeeder::class, 
+            EmployHierarchiesTableSeeder::class
         ]);
     }
 }

@@ -25,22 +25,20 @@ class UserService
                 $prepared->only($onlyUserTable)->toArray()
             );
 
-            $positionNo = array_search($prepared['designation'], designation());
-            $prepared['level'] = $positionNo;
+            $prepared['level'] = $prepared['employ_hierarchies_id'];
             // Add designation wise Data 
             $user->designation()->updateOrCreate(
                 ['user_id' => $user->id],
-                $prepared->except($onlyUserTable)->except('id', 'area_id')->toArray()
+                $prepared->except($onlyUserTable)->except('id', 'area_id', 'zone_id', 'district_id')->toArray()
             );
 
             // Add Multiple Areas
-            if (!empty($data['area_id'])) {
-                $areaIds = json_decode($data['area_id']);
-                $ids = array_map(function ($zone) {
-                    return $zone->id;
-                }, $areaIds);
-                $user->areas()->sync($ids);
-            }
+            collect(['area_id' => 'areas', 'zone_id' => 'zone', 'district_id' => 'district'])->each(function ($relation, $key) use ($data, $user) {
+                if (!empty($data[$key])) {
+                    $ids = explode(',', $data[$key]);
+                    $user->{$relation}()->sync($ids);
+                }
+            });
         });
     }
 }

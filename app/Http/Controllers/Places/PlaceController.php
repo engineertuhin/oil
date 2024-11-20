@@ -4,20 +4,22 @@ namespace App\Http\Controllers\Places;
 
 use App\Http\Controllers\Controller;
 use App\Models\Areas;
+use App\Models\Districts;
 use App\Models\Upazila;
 use App\Models\Zone;
 
 class PlaceController extends Controller
 {
 
-    public function zoneGet($id = false)
+    public function districtGet($ids = false)
     {
-        $zone = $id  ?  Zone::where('district_id', $id)->get() : [];
-        return response()->json($zone);
+        $district = $ids  ?  Districts::whereIn('zone_id', json_decode($ids))->get() : [];
+        return response()->json($district);
     }
-    public function areaGet($id = false)
+    public function areaGet($ids = false)
     {
-        $areas = $id  ?  Areas::where('zone_id', $id)->get() : [];
+     
+        $areas = $ids  ?  Areas::whereIn('district_id', json_decode($ids))->get() : [];
         return response()->json($areas);
     }
 }

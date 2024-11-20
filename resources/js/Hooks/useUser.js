@@ -1,15 +1,15 @@
 import { saveUser, deleteUser } from "@/Services/userService";
 import { useState } from "react";
-import { getAreaService, getZoneService } from "@/Services/getPlaceService";
+import { getDistrictService, getAreaService } from "@/Services/getPlaceService";
 
 export const useUser = (initialData, toast) => {
     const [user, setUser] = useState(initialData.data);
     const [gender, setGender] = useState(initialData.gender);
     const [designation, setDesignation] = useState(initialData.designation);
-    const [district, setDistrict] = useState(initialData.district);
+    const [district, setDistrict] = useState([]);
     const [area, setArea] = useState([]);
-    const [zone, setZone] = useState([]);
-    const [filteredArea, setFilteredArea] = useState(null);
+    const [zone, setZone] = useState(initialData.zone);
+
 
     const handleSave = async (data) => {
         const res = await saveUser(data);
@@ -35,51 +35,29 @@ export const useUser = (initialData, toast) => {
         });
     };
 
-    const getArea = async (id) => {
-        const res = await getAreaService(id);
+    const getDistrict = async (ids) => {
+        const res = await getDistrictService(JSON.stringify(ids));
+        setDistrict(res);
+    };
+    const getArea = async (ids) => {
+        const res = await getAreaService(JSON.stringify(ids));
         setArea(res);
     };
-    const getZone = async (id) => {
-        const res = await getZoneService(id);
-  
-        setZone(res);
-    };
 
-    const searchZone = (event) => {
-        
-        setTimeout(() => {
-            let _filteredArea;
-            if (!event.query.trim().length) {
-                _filteredArea = [...area];
-            } else {
-                _filteredArea = area.filter((list) => {
-                    return list.name
-                        .toLowerCase()
-                        .startsWith(event.query.toLowerCase());
-                });
-            }
-
-            setFilteredArea(_filteredArea);
-        }, 250);
-    };
 
     return {
         user,
         gender,
         designation,
         district,
-        getArea,
+        getDistrict,
         area,
-        getZone,
+        getArea,
         zone,
         setZone,
         setArea,
         handleSave,
         handleDelete,
-        searchZone,
-        setFilteredArea,
-        filteredArea,
-
         toast,
     };
 };

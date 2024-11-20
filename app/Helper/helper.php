@@ -21,7 +21,7 @@ if (!function_exists("gender")) {
 if (!function_exists("designation")) {
     function designation()
     {
-        return  ['Deputy General Manager (DGM)', 'Head of Sales (HOS)', 'Are Manager', 'Sr Executive', 'Jr Executive'];
+        return  ['Deputy General Manager (DGM)', 'Head of Sales (HOS)','Asstt manager', 'Are Manager', 'Jr. Manager', 'Sr. Executive','Executive', 'Jr. Executive'];
     }
 }
 if (!function_exists("clientDesignation")) {

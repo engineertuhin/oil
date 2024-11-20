@@ -1,12 +1,12 @@
 import axios from "axios";
 
-export const getAreaService = async (id) => {
-    const response = await axios.post(route("getArea", id));
+export const getAreaService = async (ids) => {
+    const response = await axios.post(route("getArea", ids));
     return response.data;
 };
 
-export const getZoneService = async (id) => {
-    const response = await axios.post(route("getZone", id));
+export const getDistrictService = async (ids) => {
+    const response = await axios.post(route("getDistrict", ids));
     return response.data;
 };
 

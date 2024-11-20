@@ -14,15 +14,13 @@ return new class extends Migration
         Schema::create('designations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('district_id')->nullable()->comment('nullable');
-            $table->unsignedBigInteger('zone_id')->nullable()->comment('nullable');
-            $table->unsignedBigInteger('area_id')->nullable()->comment('nullable');
             $table->integer('nid')->nullable();
             $table->string('number')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('gender')->nullable();
             $table->date('join_date')->nullable();
-            $table->string('designation');
+            $table->date('discontinue')->nullable();
+            $table->unsignedBigInteger('employ_hierarchies_id');
             $table->string('code')->nullable();
             $table->integer('level')->nullable();
             $table->boolean('is_active')->default(1)->comment('0: inactive, 1: active');

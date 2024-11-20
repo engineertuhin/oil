@@ -4,7 +4,9 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Districts;
+use App\Models\EmployHierarchy;
 use App\Models\User;
+use App\Models\Zone;
 use App\Service\Users\UserService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,10 +18,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $initialData['designation'] = designation();
+        $initialData['designation'] = EmployHierarchy::get();
         $initialData['gender'] = gender();
-        $initialData['district'] = Districts::get();
-        $initialData['data'] = User::whereNot('role', null)->with('designation','areas')->get();
+        $initialData['zone'] = Zone::orderByDesc('id')->get();
+        $initialData['data'] = User::whereNot('role', null)->with('designation','areas','zone','district')->get();
 
         return Inertia::render('User/User', compact('initialData'));
     }
@@ -39,7 +41,7 @@ class UserController extends Controller
     {
         UserService::userStore(filterRequest());
 
-        return response()->json(['message' => 'Operation success', 'data' => User::whereNot('role', null)->with('designation','areas')->get()]);
+        return response()->json(['message' => 'Operation success', 'data' => User::whereNot('role', null)->with('designation','areas','zone','district')->get()]);
     }
 
     /**
@@ -74,7 +76,7 @@ class UserController extends Controller
      $user=User::find($id);
      fileWithDataProcess($user,$user->profile_picture,'profile_picture');
      $user->delete();
-     return response()->json(['message' => 'Operation success', 'data' => User::whereNot('role', null)->with('designation','areas')->get()]);
+     return response()->json(['message' => 'Operation success', 'data' => User::whereNot('role', null)->with('designation','areas','zone','district')->get()]);
 
     }
 }

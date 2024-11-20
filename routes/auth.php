@@ -30,7 +30,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::post('get/area/{id}', [PlaceController::class, 'areaGet'])->name('getArea');
-    Route::post('get/zone/{id}', [PlaceController::class, 'zoneGet'])->name('getZone');
+    Route::post('get/district/{ids}', [PlaceController::class, 'districtGet'])->name('getDistrict');
 
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])

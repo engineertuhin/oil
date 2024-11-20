@@ -13,10 +13,14 @@ import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { AutoComplete } from "primereact/autocomplete";
+import { MultiSelect } from "primereact/multiselect";
 
 export default function User({ auth, initialData }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
+    const [HierarchyPrevent, setHierarchyPrevent] = useState(false);
+
+
 
     const [preview, setPreview] = useState(false);
     const {
@@ -24,17 +28,12 @@ export default function User({ auth, initialData }) {
         gender,
         designation,
         district,
-        getArea,
+        getDistrict,
         area,
-        getZone,
+        getArea,
         zone,
-        setZone,
-        setArea,
         handleSave,
         handleDelete,
-        searchZone,
-        
-        filteredArea,
     } = useUser(initialData, toast);
     const {
         control,
@@ -42,6 +41,7 @@ export default function User({ auth, initialData }) {
         handleSubmit,
         reset,
         watch,
+        setValue,
     } = useForm({});
 
     // Active button
@@ -52,8 +52,10 @@ export default function User({ auth, initialData }) {
                     icon="pi pi-pencil "
                     className="p-button-rounded  mr-2 p-button-sm h-10 w-10"
                     onClick={() => {
-                        getZone(rowData?.designation?.district_id);
-                        getArea(rowData?.designation?.zone_id);
+                        getArea(rowData?.district?.map((item) => item.id));
+                        getDistrict(
+                            rowData?.district?.map((item) => item.zone_id)
+                        );
 
                         reset({
                             name: rowData.name || "",
@@ -69,13 +71,21 @@ export default function User({ auth, initialData }) {
                             join_date:
                                 new Date(rowData.designation.date_of_birth) ||
                                 "",
+                            discontinue: 
+                                new Date(rowData.designation.discontinue) ||
+                                "",
                             gender: rowData.designation.gender || "",
-                            designation: rowData.designation.designation || "",
-                            district_id: rowData.designation.district_id || "",
+                            employ_hierarchies_id:
+                                Number(
+                                    rowData.designation.employ_hierarchies_id
+                                ) || "",
+                            district_id:
+                                rowData.district.map((item) => item.id) ||
+                                "",
 
-                            zone_id: rowData.designation.zone_id || "",
+                            zone_id: rowData.zone.map((item) => item.id) || "",
                             profile_picture: rowData.profile_picture || "",
-                            area_id: rowData.areas,
+                            area_id: rowData.areas.map((item) => item.id),
                         });
                         setPreview(false);
 
@@ -102,11 +112,7 @@ export default function User({ auth, initialData }) {
     const onSubmit = async (data) => {
         const formData = new FormData();
         for (const key in data) {
-            if (key == "area_id") {
-                formData.append(key, JSON.stringify(data[key]));
-            } else {
-                formData.append(key, data[key]);
-            }
+            formData.append(key, data[key]);
         }
         await handleSave(formData);
         if (!data.id) {
@@ -120,8 +126,9 @@ export default function User({ auth, initialData }) {
                 nid: "",
                 date_of_birth: "",
                 join_date: "",
+                discontinue: '',
                 gender: "",
-                designation: "",
+                employ_hierarchies_id: "",
                 district_id: "",
                 area_id: "",
                 zone_id: "",
@@ -158,7 +165,7 @@ export default function User({ auth, initialData }) {
                             style={{ width: "14rem" }}
                         ></Column>
                         <Column
-                            field="designation.designation"
+                            field="designation.employ_hierarchy.name"
                             alignHeader="center"
                             header="Designation"
                             bodyClassName="text-center"
@@ -198,8 +205,9 @@ export default function User({ auth, initialData }) {
                             nid: "",
                             date_of_birth: "",
                             join_date: "",
+                            discontinue: '',
                             gender: "",
-                            designation: "",
+                            employ_hierarchies_id: "",
                             district_id: "",
                             area_id: "",
                             zone_id: "",
@@ -518,6 +526,34 @@ export default function User({ auth, initialData }) {
                                 </span>
                                 {getFormErrorMessage(errors, "join_date")}
                             </div>
+                            {/* DisContinue Date Field */}
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="discontinue"
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <Calendar
+                                                id={field.name}
+                                                {...field}
+                                                className={classNames({
+                                                    "p-invalid":
+                                                        fieldState.invalid,
+                                                })}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="discontinue"
+                                        className={classNames({
+                                            "p-error": errors.join_date,
+                                        })}
+                                    >
+                                        Discontinued
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "discontinue")}
+                            </div>
 
                             {/* Gender Field */}
                             <div className="field col-span-4">
@@ -556,7 +592,7 @@ export default function User({ auth, initialData }) {
                             <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
-                                        name="designation"
+                                        name="employ_hierarchies_id"
                                         control={control}
                                         rules={{
                                             required:
@@ -567,15 +603,32 @@ export default function User({ auth, initialData }) {
                                                 options={designation}
                                                 {...field}
                                                 optionLabel="name"
+                                                optionValue="id"
                                                 filter
                                                 showClear
                                                 filterBy="name"
-                                                placeholder="Select a Designation"
+                                                placeholder="Select Designations"
+                                                value={field.value || []}
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                    setValue("district_id", []);
+                                                    setValue("area_id", []);
+                                                    setValue("zone_id", []);
+                                                    if (e.value > 4) {
+                                                        setHierarchyPrevent(
+                                                            true
+                                                        );
+                                                    } else {
+                                                        setHierarchyPrevent(
+                                                            false
+                                                        );
+                                                    }
+                                                }}
                                             />
                                         )}
                                     />
                                     <label
-                                        htmlFor="designation"
+                                        htmlFor="employ_hierarchies_id"
                                         className={classNames({
                                             "p-error": errors.designation,
                                         })}
@@ -583,9 +636,52 @@ export default function User({ auth, initialData }) {
                                         Designation*
                                     </label>
                                 </span>
-                                {getFormErrorMessage(errors, "designation")}
+                                {getFormErrorMessage(
+                                    errors,
+                                    "employ_hierarchies_id"
+                                )}
                             </div>
 
+                            {/*area  Field */}
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="zone_id"
+                                        control={control}
+                                        rules={{
+                                            required: "Area is required.",
+                                        }}
+                                        render={({ field, fieldState }) => (
+                                            <MultiSelect
+                                                value={field.value}
+                                                options={zone}
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                    setValue("district_id", []);
+                                                    setValue("area_id", []);
+                                                    getDistrict(e.value);
+                                                }}
+                                                maxSelectedLabels={2}
+                                                optionLabel="name"
+                                                optionValue="id"
+                                                filter
+                                                selectionLimit={
+                                                    HierarchyPrevent ? 1 : false
+                                                }
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="zone_id"
+                                        className={classNames({
+                                            "p-error": errors.area_id,
+                                        })}
+                                    >
+                                        Zone
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "zone_id")}
+                            </div>
                             {/* District Field */}
                             <div className="field col-span-4">
                                 <span className="p-float-label">
@@ -596,21 +692,24 @@ export default function User({ auth, initialData }) {
                                             required: "District is required.",
                                         }}
                                         render={({ field, fieldState }) => (
-                                            <Dropdown
+                                            <MultiSelect
                                                 options={district}
                                                 value={field.value}
                                                 onChange={(e) => {
-                                                    setArea([]);
-                                                    setZone([]);
                                                     field.onChange(e.value);
-                                                    getZone(e.value);
+                                                    setValue("area_id", []);
+                                                    getArea(e.value);
                                                 }}
                                                 optionLabel="name"
                                                 optionValue="id"
                                                 filter
                                                 showClear
                                                 filterBy="name"
+                                                maxSelectedLabels={2}
                                                 placeholder="Select a District"
+                                                selectionLimit={
+                                                    HierarchyPrevent ? 1 : false
+                                                }
                                             />
                                         )}
                                     />
@@ -627,63 +726,25 @@ export default function User({ auth, initialData }) {
                             </div>
 
                             {/* Area Field */}
-                            <div className="field col-span-4">
+                            <div className="field col-span-8">
                                 <span className="p-float-label">
                                     <Controller
-                                        name="zone_id"
+                                        name="area_id"
                                         control={control}
-                                        rules={{
-                                            required: "Area is required.",
-                                        }}
                                         render={({ field, fieldState }) => (
-                                            <Dropdown
-                                                options={zone}
+                                            <MultiSelect
+                                                options={area}
                                                 value={field.value}
                                                 onChange={(e) => {
-                                                    setArea([]);
                                                     field.onChange(e.value);
-                                                    getArea(e.value);
                                                 }}
                                                 optionLabel="name"
                                                 optionValue="id"
                                                 filter
                                                 showClear
                                                 filterBy="name"
-                                                placeholder="Select an Area"
-                                            />
-                                        )}
-                                    />
-                                    <label
-                                        htmlFor="zone_id"
-                                        className={classNames({
-                                            "p-error": errors.area_id,
-                                        })}
-                                    >
-                                        Zone
-                                    </label>
-                                </span>
-                                {getFormErrorMessage(errors, "zone_id")}
-                            </div>
-
-                            {/* zone Field */}
-                            <div className="field col-span-12">
-                                <span className="p-float-label">
-                                    <Controller
-                                        name="area_id"
-                                        control={control}
-                                        render={({ field, fieldState }) => (
-                                            <AutoComplete
-                                                value={field.value}
-                                                onChange={(e) =>
-                                                    field.onChange(e.value)
-                                                }
-                                                suggestions={filteredArea}
-                                                completeMethod={searchZone}
-                                                field="name"
-                                                multiple
-                                                dropdown
-                                                aria-label="zone"
-                                                dropdownAriaLabel="Select zone"
+                                                maxSelectedLabels={2}
+                                                placeholder="Select a District"
                                             />
                                         )}
                                     />

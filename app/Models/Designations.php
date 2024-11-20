@@ -18,5 +18,9 @@ class Designations extends Model
     {
         return $this->belongsTo(Zone::class);
     }
+    public function employHierarchy()
+    {
+        return $this->belongsTo(EmployHierarchy::class,'level','id');
+    }
     
 }

@@ -42,11 +42,20 @@ class User extends Authenticatable
 
     public function designation()
     {
-        return $this->hasOne(Designations::class, 'user_id', 'id');
+        return $this->hasOne(Designations::class, 'user_id', 'id')->with('employHierarchy');
     }
+
 
     public function areas()
     {
         return $this->belongsToMany(Areas::class, 'user_areas', 'user_id', 'area_id');
+    }
+    public function zone()
+    {
+        return $this->belongsToMany(Zone::class, 'user_zones', 'user_id', 'zone_id');
+    }
+    public function district()
+    {
+        return $this->belongsToMany(Districts::class, 'user_districts', 'user_id', 'district_id');
     }
 }
