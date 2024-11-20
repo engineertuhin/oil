@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('nid')->nullable();
             $table->string('gender')->nullable();
             $table->unsignedBigInteger('district_id')->nullable();
-            $table->unsignedBigInteger('upazila_id')->nullable();
+            $table->unsignedBigInteger('zone_id')->nullable();
             $table->unsignedBigInteger('area_id')->nullable();
             $table->string('type');
             $table->string('profile_picture')->nullable();

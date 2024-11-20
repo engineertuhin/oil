@@ -24,8 +24,10 @@ export default function Client({ auth, initialData }) {
         district,
         getArea,
         area,
-        getUpazila,
-        upazila,
+        getZone,
+        zone,
+        setArea,
+        setZone,
         handleSave,
         handleDelete,
     } = useClient(initialData, toast);
@@ -46,7 +48,7 @@ export default function Client({ auth, initialData }) {
                     className="p-button-rounded  mr-2 p-button-sm h-10 w-10"
                     onClick={() => {
                         getArea(rowData?.district_id);
-                        getUpazila(rowData?.area_id);
+                        getZone(rowData?.area_id);
                         reset({
                             name: rowData.name || "",
                             code: rowData.code || "",
@@ -57,7 +59,7 @@ export default function Client({ auth, initialData }) {
                             type: rowData.type || "",
                             district_id: rowData.district_id || "",
                             area_id: Number(rowData.area_id) || "",
-                            upazila_id: rowData.upazila_id || "",
+                            zone_id: rowData.zone_id || "",
                             profile_picture: rowData.profile_picture || "",
                         });
                         setPreview(false);
@@ -100,7 +102,7 @@ export default function Client({ auth, initialData }) {
                 type: "",
                 district_id: "",
                 area_id: "",
-                upazila_id: "",
+                zone_id: "",
             });
             setPreview(false);
         }
@@ -177,7 +179,7 @@ export default function Client({ auth, initialData }) {
                             type: "",
                             district_id: "",
                             area_id: "",
-                            upazila_id: "",
+                            zone_id: "",
                         });
                         setPreview(false);
                     }}
@@ -451,8 +453,10 @@ export default function Client({ auth, initialData }) {
                                                 options={district}
                                                 value={field.value}
                                                 onChange={(e) => {
+                                                    setArea([]);
+                                                    setZone([]);
                                                     field.onChange(e.value);
-                                                    getArea(e.value);
+                                                    getZone(e.value);
                                                 }}
                                                 optionLabel="name"
                                                 optionValue="id"
@@ -479,6 +483,45 @@ export default function Client({ auth, initialData }) {
                             <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
+                                        name="zone_id"
+                                        control={control}
+                                        rules={{
+                                            required: "Area is required.",
+                                        }}
+                                        render={({ field, fieldState }) => (
+                                            <Dropdown
+                                                options={zone}
+                                                value={field.value}
+                                                onChange={(e) => {
+                                                    setArea([]);
+                                                    field.onChange(e.value);
+                                                    getArea(e.value);
+                                                }}
+                                                optionLabel="name"
+                                                optionValue="id"
+                                                filter
+                                                showClear
+                                                filterBy="name"
+                                                placeholder="Select an Area"
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="zone_id"
+                                        className={classNames({
+                                            "p-error": errors.area_id,
+                                        })}
+                                    >
+                                        Zone
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "zone_id")}
+                            </div>
+
+                            {/* Area Field */}
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
                                         name="area_id"
                                         control={control}
                                         render={({ field, fieldState }) => (
@@ -493,54 +536,20 @@ export default function Client({ auth, initialData }) {
                                                 filter
                                                 showClear
                                                 filterBy="name"
-                                                placeholder="Select an Area"
+                                                placeholder="Select an zone"
                                             />
                                         )}
                                     />
                                     <label
                                         htmlFor="area_id"
                                         className={classNames({
-                                            "p-error": errors.area_id,
+                                            "p-error": errors.zone_id,
                                         })}
                                     >
                                         Area
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "area_id")}
-                            </div>
-
-                            {/* Upazila Field */}
-                            <div className="field col-span-4">
-                                <span className="p-float-label">
-                                    <Controller
-                                        name="upazila_id"
-                                        control={control}
-                                        render={({ field, fieldState }) => (
-                                            <Dropdown
-                                                options={upazila}
-                                                value={field.value}
-                                                onChange={(e) =>
-                                                    field.onChange(e.value)
-                                                }
-                                                optionLabel="name"
-                                                optionValue="id"
-                                                filter
-                                                showClear
-                                                filterBy="name"
-                                                placeholder="Select an Upazila"
-                                            />
-                                        )}
-                                    />
-                                    <label
-                                        htmlFor="upazila_id"
-                                        className={classNames({
-                                            "p-error": errors.upazila_id,
-                                        })}
-                                    >
-                                        Upazila
-                                    </label>
-                                </span>
-                                {getFormErrorMessage(errors, "upazila_id")}
                             </div>
                         </div>
                     </form>

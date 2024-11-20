@@ -9,12 +9,10 @@ import { useForm, Controller } from "react-hook-form";
 import { classNames } from "primereact/utils";
 import axios from "axios";
 import { Button } from "primereact/button";
-import { Dropdown } from "primereact/dropdown";
-export default function Upazila({ auth, getData, areas }) {
+export default function Zone({ auth, getData, districts }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
     const [datas, setData] = useState(getData);
-    const [areaList, setareas] = useState(areas);
 
     const {
         control,
@@ -25,7 +23,7 @@ export default function Upazila({ auth, getData, areas }) {
         name: "",
         code: "",
         id: "",
-        area_id: "",
+
     });
 
     const getFormErrorMessage = (name) => {
@@ -36,7 +34,7 @@ export default function Upazila({ auth, getData, areas }) {
         );
     };
 
-    // Active buttion
+    // Active button
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
@@ -48,7 +46,7 @@ export default function Upazila({ auth, getData, areas }) {
                             name: rowData.name,
                             code: rowData.code,
                             id: rowData.id,
-                            area_id: rowData.area_id,
+                       
                         });
                         setModel(true);
                     }}
@@ -67,7 +65,7 @@ export default function Upazila({ auth, getData, areas }) {
     const dataDelete = (id) => {
         if (!confirm("Are you sure you want to delete this?")) return;
 
-        axios.delete(route("upazila.destroy", id)).then((res) => {
+        axios.delete(route("zone.destroy", id)).then((res) => {
             setData(res.data.data);
             toast.current.show({
                 severity: "info",
@@ -80,14 +78,14 @@ export default function Upazila({ auth, getData, areas }) {
 
     // Insert or Update
     const onSubmit = (data) => {
-        axios.post(route("upazila.store"), data).then((res) => {
+        axios.post(route("zone.store"), data).then((res) => {
             setData(res.data.data);
             if (!data.id) {
                 reset({
                     name: "",
                     code: "",
                     id: "",
-                    area_id: "",
+                  
                 });
             }
             toast.current.show({
@@ -104,10 +102,10 @@ export default function Upazila({ auth, getData, areas }) {
             user={auth.user}
             header={
                 <>
-                    <h2 className="text-skin-header font-medium ">Upazila</h2>{" "}
+                    <h2 className="text-skin-header font-medium ">zone</h2>{" "}
                     <p className="text-skin-sub-header text-xs">
                         {" "}
-                        Home - Upazila
+                        Home - zone
                     </p>
                 </>
             }
@@ -120,7 +118,7 @@ export default function Upazila({ auth, getData, areas }) {
                 <div className="card">
                     <DataTable
                         data={datas}
-                        addbuttom="Add Upazila"
+                        addbuttom="Add zone"
                         model={setModel}
                     >
                         <Column
@@ -159,13 +157,13 @@ export default function Upazila({ auth, getData, areas }) {
                     breakpoints={{ "960px": "75vw", "641px": "90vw" }}
                     model={model}
                     setModel={setModel}
-                    title="Upazila Add"
+                    title="zone Add"
                     resetData={() => {
                         reset({
                             name: "",
                             code: "",
                             id: "",
-                            area_id: "",
+                          
                         });
                     }}
                 >
@@ -237,38 +235,7 @@ export default function Upazila({ auth, getData, areas }) {
                                 </span>
                                 {getFormErrorMessage("code")}
                             </div>
-                            <div className="field">
-                                <span className="p-float-label">
-                                    <Controller
-                                        name="area_id"
-                                        control={control}
-                                        rules={{
-                                            required: "Area is required.",
-                                        }}
-                                        render={({ field, fieldState }) => (
-                                            <Dropdown
-                                                options={areaList}
-                                                {...field}
-                                                optionLabel="name"
-                                                optionValue="id"
-                                                filter
-                                                showClear
-                                                filterBy="name"
-                                                placeholder="Select a Area"
-                                            />
-                                        )}
-                                    />
-                                    <label
-                                        htmlFor="area"
-                                        className={classNames({
-                                            "p-error": errors.name,
-                                        })}
-                                    >
-                                        Area*
-                                    </label>
-                                </span>
-                                {getFormErrorMessage("area")}
-                            </div>
+                           
                         </div>
                     </form>
                 </Model>

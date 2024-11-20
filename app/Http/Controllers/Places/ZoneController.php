@@ -5,22 +5,21 @@ namespace App\Http\Controllers\Places;
 use App\Http\Controllers\Controller;
 use App\Models\Areas;
 use App\Models\Districts;
-use App\Models\Upazila;
-use App\Service\Districts\DistrictsService;
-use App\Service\Upazila\UpazilaService;
+use App\Models\Zone;
+use App\Service\Zone\ZoneService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class UpazilaController extends Controller
+class ZoneController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $getData = Upazila::orderByDesc('id')->get();
-        $areas = Areas::orderByDesc('id')->get();
-        return Inertia::render('Place/Upazila/Upazila',compact('getData','areas'));
+        $getData = Zone::orderByDesc('id')->get();
+        $districts = Districts::orderByDesc('id')->get();
+        return Inertia::render('Place/Zone/Zone',compact('getData','districts'));
     }
 
 
@@ -31,8 +30,8 @@ class UpazilaController extends Controller
     public function store(Request $request)
     {
 
-        UpazilaService::store(filterRequest());
-        $getData = Upazila::orderByDesc('id')->get();
+        ZoneService::store(filterRequest());
+        $getData = Zone::orderByDesc('id')->get();
         return response()->json(['message' => 'Operation success', 'data'=> $getData]);
     }
 
@@ -65,8 +64,8 @@ class UpazilaController extends Controller
      */
     public function destroy(string $id)
     {
-        Upazila::find($id)->delete();
-        $getData = Upazila::orderByDesc('id')->get();
+        Zone::find($id)->delete();
+        $getData = Zone::orderByDesc('id')->get();
         return response()->json(['message' => 'Operation success', 'data'=> $getData]);
     }
 }

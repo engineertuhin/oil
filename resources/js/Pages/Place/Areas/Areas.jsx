@@ -10,11 +10,12 @@ import { classNames } from "primereact/utils";
 import axios from "axios";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
-export default function Areas({ auth, getData, districs }) {
+export default function Areas({ auth, getData, zone }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
     const [datas, setData] = useState(getData);
-    const [districsList, setDistrics] = useState(districs);
+    const [zoneList, setzone] = useState(zone);
+
 
     const {
         control,
@@ -25,7 +26,7 @@ export default function Areas({ auth, getData, districs }) {
         name: "",
         code: "",
         id: "",
-        district_id: "",
+        zone_id: "",
     });
 
     const getFormErrorMessage = (name) => {
@@ -48,7 +49,7 @@ export default function Areas({ auth, getData, districs }) {
                             name: rowData.name,
                             code: rowData.code,
                             id: rowData.id,
-                            district_id: rowData.district_id,
+                            zone_id: rowData.zone_id,
                         });
                         setModel(true);
                     }}
@@ -87,7 +88,7 @@ export default function Areas({ auth, getData, districs }) {
                     name: "",
                     code: "",
                     id: "",
-                    district_id: "",
+                    zone_id: "",
                 });
             }
             toast.current.show({
@@ -165,7 +166,7 @@ export default function Areas({ auth, getData, districs }) {
                             name: "",
                             code: "",
                             id: "",
-                            district_id: "",
+                            zone_id: "",
                         });
                     }}
                 >
@@ -240,14 +241,14 @@ export default function Areas({ auth, getData, districs }) {
                             <div className="field">
                                 <span className="p-float-label">
                                     <Controller
-                                        name="district_id"
+                                        name="zone_id"
                                         control={control}
                                         rules={{
-                                            required: "Districts is required.",
+                                            required: "Zone is required.",
                                         }}
                                         render={({ field, fieldState }) => (
                                             <Dropdown
-                                                options={districsList}
+                                                options={zoneList}
                                                 {...field}
                                                 optionLabel="name"
                                                 optionValue="id"
@@ -259,15 +260,15 @@ export default function Areas({ auth, getData, districs }) {
                                         )}
                                     />
                                     <label
-                                        htmlFor="districts"
+                                        htmlFor="zone_id"
                                         className={classNames({
                                             "p-error": errors.name,
                                         })}
                                     >
-                                        Districts*
+                                        Zone*
                                     </label>
                                 </span>
-                                {getFormErrorMessage("districts")}
+                                {getFormErrorMessage("zone_id")}
                             </div>
                         </div>
                     </form>

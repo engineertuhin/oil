@@ -19,7 +19,7 @@ class UserController extends Controller
         $initialData['designation'] = designation();
         $initialData['gender'] = gender();
         $initialData['district'] = Districts::get();
-        $initialData['data'] = User::whereNot('role', null)->with('designation')->get();
+        $initialData['data'] = User::whereNot('role', null)->with('designation','areas')->get();
 
         return Inertia::render('User/User', compact('initialData'));
     }
@@ -39,7 +39,7 @@ class UserController extends Controller
     {
         UserService::userStore(filterRequest());
 
-        return response()->json(['message' => 'Operation success', 'data' => User::whereNot('role', null)->with('designation')->get()]);
+        return response()->json(['message' => 'Operation success', 'data' => User::whereNot('role', null)->with('designation','areas')->get()]);
     }
 
     /**
@@ -74,7 +74,7 @@ class UserController extends Controller
      $user=User::find($id);
      fileWithDataProcess($user,$user->profile_picture,'profile_picture');
      $user->delete();
-     return response()->json(['message' => 'Operation success', 'data' => User::whereNot('role', null)->with('designation')->get()]);
+     return response()->json(['message' => 'Operation success', 'data' => User::whereNot('role', null)->with('designation','areas')->get()]);
 
     }
 }

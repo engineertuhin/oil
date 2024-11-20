@@ -44,5 +44,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Designations::class, 'user_id', 'id');
     }
-    
+
+    public function areas()
+    {
+        return $this->belongsToMany(Areas::class, 'user_areas', 'user_id', 'area_id');
+    }
 }

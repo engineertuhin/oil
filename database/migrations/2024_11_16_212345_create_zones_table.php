@@ -11,18 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('upazilas', function (Blueprint $table) {
+        Schema::create('zones', function (Blueprint $table) {
+   
+
             $table->id();
-            $table->bigInteger('area_id');
+            $table->bigInteger('district_id');
             $table->string('name');
             $table->string('code');
             $table->boolean('is_active')->default(0);
             $table->timestamps();
-            $table->foreign('area_id')
+            $table->foreign('district_id')
             ->references('id') 
-            ->on('areas')
+            ->on('districts')
             ->onDelete('cascade'); 
         });
+
     }
 
     /**
@@ -30,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('upazilas');
+        Schema::dropIfExists('zones');
     }
 };

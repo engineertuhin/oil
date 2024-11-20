@@ -11,27 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('areas', function (Blueprint $table) {
+        Schema::create('user_areas', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('zone_id');
-            $table->string('name');
-            $table->string('code');
-            $table->boolean('is_active')->default(0);
+            $table->unsignedBigInteger('user_id');
+            $table->integer('area_id')->nullable();
             $table->timestamps();
-            $table->foreign('zone_id')
-            ->references('id') 
-            ->on('zones')
-            ->onDelete('cascade'); 
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
-
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('areas');
+        Schema::dropIfExists('user_areas');
     }
 };

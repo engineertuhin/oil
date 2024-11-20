@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('district_id')->nullable()->comment('nullable');
-            $table->unsignedBigInteger('upazila_id')->nullable()->comment('nullable');
+            $table->unsignedBigInteger('zone_id')->nullable()->comment('nullable');
             $table->unsignedBigInteger('area_id')->nullable()->comment('nullable');
             $table->integer('nid')->nullable();
+            $table->string('number')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('gender')->nullable();
             $table->date('join_date')->nullable();

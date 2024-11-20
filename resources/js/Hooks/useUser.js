@@ -1,6 +1,6 @@
 import { saveUser, deleteUser } from "@/Services/userService";
 import { useState } from "react";
-import { getAreaService, getUpazilaService } from "@/Services/getPlaceService";
+import { getAreaService, getZoneService } from "@/Services/getPlaceService";
 
 export const useUser = (initialData, toast) => {
     const [user, setUser] = useState(initialData.data);
@@ -8,7 +8,8 @@ export const useUser = (initialData, toast) => {
     const [designation, setDesignation] = useState(initialData.designation);
     const [district, setDistrict] = useState(initialData.district);
     const [area, setArea] = useState([]);
-    const [upazila, setUpazila] = useState([]);
+    const [zone, setZone] = useState([]);
+    const [filteredArea, setFilteredArea] = useState(null);
 
     const handleSave = async (data) => {
         const res = await saveUser(data);
@@ -38,9 +39,28 @@ export const useUser = (initialData, toast) => {
         const res = await getAreaService(id);
         setArea(res);
     };
-    const getUpazila = async (id) => {
-        const res = await getUpazilaService(id);
-        setUpazila(res);
+    const getZone = async (id) => {
+        const res = await getZoneService(id);
+  
+        setZone(res);
+    };
+
+    const searchZone = (event) => {
+        
+        setTimeout(() => {
+            let _filteredArea;
+            if (!event.query.trim().length) {
+                _filteredArea = [...area];
+            } else {
+                _filteredArea = area.filter((list) => {
+                    return list.name
+                        .toLowerCase()
+                        .startsWith(event.query.toLowerCase());
+                });
+            }
+
+            setFilteredArea(_filteredArea);
+        }, 250);
     };
 
     return {
@@ -50,10 +70,16 @@ export const useUser = (initialData, toast) => {
         district,
         getArea,
         area,
-        getUpazila,
-        upazila,
+        getZone,
+        zone,
+        setZone,
+        setArea,
         handleSave,
         handleDelete,
+        searchZone,
+        setFilteredArea,
+        filteredArea,
+
         toast,
     };
 };

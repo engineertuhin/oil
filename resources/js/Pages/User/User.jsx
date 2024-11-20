@@ -12,10 +12,12 @@ import { useUser } from "@/Hooks/useUser";
 import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
+import { AutoComplete } from "primereact/autocomplete";
 
 export default function User({ auth, initialData }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
+
     const [preview, setPreview] = useState(false);
     const {
         user,
@@ -24,10 +26,15 @@ export default function User({ auth, initialData }) {
         district,
         getArea,
         area,
-        getUpazila,
-        upazila,
+        getZone,
+        zone,
+        setZone,
+        setArea,
         handleSave,
         handleDelete,
+        searchZone,
+        
+        filteredArea,
     } = useUser(initialData, toast);
     const {
         control,
@@ -45,11 +52,13 @@ export default function User({ auth, initialData }) {
                     icon="pi pi-pencil "
                     className="p-button-rounded  mr-2 p-button-sm h-10 w-10"
                     onClick={() => {
-                        getArea(rowData?.designation?.district_id);
-                        getUpazila(rowData?.designation?.area_id);
+                        getZone(rowData?.designation?.district_id);
+                        getArea(rowData?.designation?.zone_id);
+
                         reset({
                             name: rowData.name || "",
-                            code: rowData.code || "",
+                            code: rowData.designation.code || "",
+                            number: rowData.designation.number || "",
                             id: rowData.id || "",
                             email: rowData.email || "",
                             password: rowData.password || "",
@@ -63,9 +72,10 @@ export default function User({ auth, initialData }) {
                             gender: rowData.designation.gender || "",
                             designation: rowData.designation.designation || "",
                             district_id: rowData.designation.district_id || "",
-                            area_id: Number(rowData.designation.area_id) || "",
-                            upazila_id: rowData.designation.upazila_id || "",
+
+                            zone_id: rowData.designation.zone_id || "",
                             profile_picture: rowData.profile_picture || "",
+                            area_id: rowData.areas,
                         });
                         setPreview(false);
 
@@ -92,14 +102,18 @@ export default function User({ auth, initialData }) {
     const onSubmit = async (data) => {
         const formData = new FormData();
         for (const key in data) {
-            formData.append(key, data[key]);
+            if (key == "area_id") {
+                formData.append(key, JSON.stringify(data[key]));
+            } else {
+                formData.append(key, data[key]);
+            }
         }
-
         await handleSave(formData);
         if (!data.id) {
             reset({
                 name: "",
                 code: "",
+                number: "",
                 id: "",
                 email: "",
                 password: "",
@@ -110,7 +124,7 @@ export default function User({ auth, initialData }) {
                 designation: "",
                 district_id: "",
                 area_id: "",
-                upazila_id: "",
+                zone_id: "",
             });
             setPreview(false);
         }
@@ -177,6 +191,7 @@ export default function User({ auth, initialData }) {
                         reset({
                             name: "",
                             code: "",
+                            number: "",
                             id: "",
                             email: "",
                             password: "",
@@ -187,7 +202,7 @@ export default function User({ auth, initialData }) {
                             designation: "",
                             district_id: "",
                             area_id: "",
-                            upazila_id: "",
+                            zone_id: "",
                         });
                         setPreview(false);
                     }}
@@ -347,6 +362,34 @@ export default function User({ auth, initialData }) {
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "email")}
+                            </div>
+                            {/* Number Field */}
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="number"
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <InputText
+                                                id={field.name}
+                                                {...field}
+                                                className={classNames({
+                                                    "p-invalid":
+                                                        fieldState.invalid,
+                                                })}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="number"
+                                        className={classNames({
+                                            "p-error": errors.code,
+                                        })}
+                                    >
+                                        Number
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "number")}
                             </div>
 
                             {/* Password Field */}
@@ -557,8 +600,10 @@ export default function User({ auth, initialData }) {
                                                 options={district}
                                                 value={field.value}
                                                 onChange={(e) => {
+                                                    setArea([]);
+                                                    setZone([]);
                                                     field.onChange(e.value);
-                                                    getArea(e.value);
+                                                    getZone(e.value);
                                                 }}
                                                 optionLabel="name"
                                                 optionValue="id"
@@ -585,18 +630,20 @@ export default function User({ auth, initialData }) {
                             <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
-                                        name="area_id"
+                                        name="zone_id"
                                         control={control}
                                         rules={{
                                             required: "Area is required.",
                                         }}
                                         render={({ field, fieldState }) => (
                                             <Dropdown
-                                                options={area}
+                                                options={zone}
                                                 value={field.value}
-                                                onChange={(e) =>
-                                                    field.onChange(e.value)
-                                                }
+                                                onChange={(e) => {
+                                                    setArea([]);
+                                                    field.onChange(e.value);
+                                                    getArea(e.value);
+                                                }}
                                                 optionLabel="name"
                                                 optionValue="id"
                                                 filter
@@ -607,49 +654,49 @@ export default function User({ auth, initialData }) {
                                         )}
                                     />
                                     <label
-                                        htmlFor="area_id"
+                                        htmlFor="zone_id"
                                         className={classNames({
                                             "p-error": errors.area_id,
                                         })}
                                     >
-                                        Area*
+                                        Zone
                                     </label>
                                 </span>
-                                {getFormErrorMessage(errors, "area_id")}
+                                {getFormErrorMessage(errors, "zone_id")}
                             </div>
 
-                            {/* Upazila Field */}
-                            <div className="field col-span-4">
+                            {/* zone Field */}
+                            <div className="field col-span-12">
                                 <span className="p-float-label">
                                     <Controller
-                                        name="upazila_id"
+                                        name="area_id"
                                         control={control}
                                         render={({ field, fieldState }) => (
-                                            <Dropdown
-                                                options={upazila}
+                                            <AutoComplete
                                                 value={field.value}
                                                 onChange={(e) =>
                                                     field.onChange(e.value)
                                                 }
-                                                optionLabel="name"
-                                                optionValue="id"
-                                                filter
-                                                showClear
-                                                filterBy="name"
-                                                placeholder="Select an Upazila"
+                                                suggestions={filteredArea}
+                                                completeMethod={searchZone}
+                                                field="name"
+                                                multiple
+                                                dropdown
+                                                aria-label="zone"
+                                                dropdownAriaLabel="Select zone"
                                             />
                                         )}
                                     />
                                     <label
-                                        htmlFor="upazila_id"
+                                        htmlFor="area_id"
                                         className={classNames({
-                                            "p-error": errors.upazila_id,
+                                            "p-error": errors.zone_id,
                                         })}
                                     >
-                                        Upazila
+                                        Area
                                     </label>
                                 </span>
-                                {getFormErrorMessage(errors, "upazila_id")}
+                                {getFormErrorMessage(errors, "area_id")}
                             </div>
                         </div>
                     </form>

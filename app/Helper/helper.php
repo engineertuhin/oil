@@ -21,13 +21,13 @@ if (!function_exists("gender")) {
 if (!function_exists("designation")) {
     function designation()
     {
-        return  ['DGM', 'HOS', 'Are Manager', 'Sr JR Executive'];
+        return  ['Deputy General Manager (DGM)', 'Head of Sales (HOS)', 'Are Manager', 'Sr Executive', 'Jr Executive'];
     }
 }
 if (!function_exists("clientDesignation")) {
     function clientDesignation()
     {
-        return  ['Client', 'Retailer'];
+        return  ['Customer', 'Dealer'];
     }
 }
 

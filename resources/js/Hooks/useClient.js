@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getAreaService, getUpazilaService } from "@/Services/getPlaceService";
+import { getAreaService, getZoneService } from "@/Services/getPlaceService";
 import { saveUser, deleteUser } from "@/Services/clientService";
 
 export const useClient = (initialData, toast) => {
@@ -8,7 +8,7 @@ export const useClient = (initialData, toast) => {
     const [type, setType] = useState(initialData.designation);
     const [district, setDistrict] = useState(initialData.district);
     const [area, setArea] = useState([]);
-    const [upazila, setUpazila] = useState([]);
+    const [zone, setZone] = useState([]);
 
     const handleSave = async (data) => {
         const res = await saveUser(data);
@@ -37,9 +37,9 @@ export const useClient = (initialData, toast) => {
         const res = await getAreaService(id);
         setArea(res);
     };
-    const getUpazila = async (id) => {
-        const res = await getUpazilaService(id);
-        setUpazila(res);
+    const getZone = async (id) => {
+        const res = await getZoneService(id);
+        setZone(res);
     };
 
     return {
@@ -49,8 +49,10 @@ export const useClient = (initialData, toast) => {
         district,
         getArea,
         area,
-        getUpazila,
-        upazila,
+        getZone,
+        zone,
+        setArea,
+        setZone,
         handleSave,
         handleDelete,
         toast,

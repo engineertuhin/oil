@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Places;
 use App\Http\Controllers\Controller;
 use App\Models\Areas;
 use App\Models\Districts;
+use App\Models\Zone;
 use App\Service\Areas\AreasService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,8 +18,8 @@ class AreasController extends Controller
     public function index()
     {
         $getData = Areas::orderByDesc('id')->get();
-        $districs = Districts::orderByDesc('id')->get();
-        return Inertia::render('Place/Areas/Areas',compact('getData','districs'));
+        $zone = Zone::orderByDesc('id')->get();
+        return Inertia::render('Place/Areas/Areas',compact('getData','zone'));
     }
 
 

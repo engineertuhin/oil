@@ -19,10 +19,15 @@ export default function Sidebar() {
                 active={
                     route().current("districts.index") ||
                     route().current("areas.index") ||
-                    route().current("upazila.index")
+                    route().current("zone.index")
                 }
                 icon="fa-solid fa-location-dot"
             >
+                <NavChild
+                    label="Zone"
+                    routePath={"zone.index"}
+                    active={route().current("zone.index")}
+                />
                 <NavChild
                     label="Districts"
                     routePath={"districts.index"}
@@ -32,11 +37,6 @@ export default function Sidebar() {
                     label="Areas"
                     routePath={"areas.index"}
                     active={route().current("areas.index")}
-                />
-                <NavChild
-                    label="Upazila"
-                    routePath={"upazila.index"}
-                    active={route().current("upazila.index")}
                 />
             </NavLink>
             {/* Place Section */}
@@ -52,14 +52,25 @@ export default function Sidebar() {
                 />
             </NavLink>
             <NavLink
-                label={"Client"}
+                label={"Dealer/Customer"}
                 active={route().current("client.index")}
                 icon="fa-solid fa-user-group"
             >
                 <NavChild
-                    label="Client"
+                    label="Dealer/Customer"
                     routePath={"client.index"}
                     active={route().current("client.index")}
+                />
+            </NavLink>
+            <NavLink
+                label={"Report"}
+                active={route().current("organography")}
+                icon="fa-solid fa-clipboard-list"
+            >
+                <NavChild
+                    label="Organogram"
+                    routePath={"organography"}
+                    active={route().current("organography")}
                 />
             </NavLink>
         </ul>

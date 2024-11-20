@@ -5,7 +5,8 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Places\AreasController;
 use App\Http\Controllers\Places\DistrictController;
 use App\Http\Controllers\Places\PlaceController;
-use App\Http\Controllers\Places\UpazilaController;
+use App\Http\Controllers\Places\ZoneController;
+use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,13 +20,17 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::resource('districts', DistrictController::class);
     Route::resource('areas', AreasController::class);
-    Route::resource('upazila', UpazilaController::class);
+    Route::resource('zone', ZoneController::class);
     Route::resource('user', UserController::class);
     Route::resource('client', ClientController::class);
 
+    Route::prefix('report')->group(function () {
+        Route::get('organography', [ReportController::class, 'organography'])->name('organography');
+    });
+
 
     Route::post('get/area/{id}', [PlaceController::class, 'areaGet'])->name('getArea');
-    Route::post('get/upazila/{id}', [PlaceController::class, 'upazilaGet'])->name('getUpazila');
+    Route::post('get/zone/{id}', [PlaceController::class, 'zoneGet'])->name('getZone');
 
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])

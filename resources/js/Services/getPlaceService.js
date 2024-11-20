@@ -5,8 +5,8 @@ export const getAreaService = async (id) => {
     return response.data;
 };
 
-export const getUpazilaService = async (id) => {
-    const response = await axios.post(route("getUpazila", id));
+export const getZoneService = async (id) => {
+    const response = await axios.post(route("getZone", id));
     return response.data;
 };
 

@@ -14,4 +14,9 @@ class Designations extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class);
+    }
+    
 }
