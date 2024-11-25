@@ -67,8 +67,12 @@ if (!function_exists("fileWithDataProcess")) {
     }
 }
 // Generate Code
-function generateCode($prefix , $modelName, $collumName = 'code'){
-    $previousCode = $modelName::orderByDesc('id')->select($collumName)->first();
-    $code = $previousCode ? sprintf("%04d", ((int)(explode("-",$previousCode))[1] + 1))  : '0001';
-    return $prefix.'-'.$code;
+
+if (!function_exists("generateCode")) {
+    function generateCode($prefix, $modelName, $columnName = 'code')
+    {
+        $previousCode = $modelName::orderByDesc('id')->select($columnName)->first();
+        $code = $previousCode ? sprintf("%04d", ((int)(explode("-", $previousCode))[1] + 1))  : '0001';
+        return $prefix . '-' . $code;
+    }
 }
