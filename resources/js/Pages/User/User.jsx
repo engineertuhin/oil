@@ -105,7 +105,6 @@ export default function User({ auth, initialData }) {
         if (!confirm("Are you sure you want to delete this?")) return;
         await handleDelete(id);
         let newCode = await handleDelete(id);
-
         setCode(newCode);
         reset(resetForm({ code: newCode }));
     };

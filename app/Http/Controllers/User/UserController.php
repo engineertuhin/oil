@@ -17,14 +17,14 @@ class UserController extends Controller
     public function index()
     {
         $initialData['designation'] = EmployHierarchy::get();
-        $initialData['code'] = generateCode('U',Designations::class);
+        $initialData['code'] = generateCode('U', Designations::class);
         $initialData['gender'] = gender();
         $initialData['zone'] = Zone::orderByDesc('id')->get();
-        $initialData['data'] = User::whereNot('role', null)->with('designation','areas','zone','district')->get();
+        $initialData['data'] = User::whereNot('role', null)->with('designation', 'areas', 'zone', 'district')->get();
 
         return Inertia::render('User/User', compact('initialData'));
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -40,8 +40,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
         UserService::userStore(filterRequest());
-        $initialData['code'] = generateCode('U',Designations::class);
-        $initialData['user'] = User::whereNot('role', null)->with('designation','areas','zone','district')->get();
+        $initialData['code'] = generateCode('U', Designations::class);
+        $initialData['user'] = User::whereNot('role', null)->with('designation', 'areas', 'zone', 'district')->get();
         return response()->json(['message' => 'Operation success', 'data' => $initialData]);
     }
 
@@ -74,13 +74,11 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-     $user=User::find($id);
-
-     fileWithDataProcess($user,$user->profile_picture,'profile_picture');
-    //  $user->delete();
-    //  $initialData['code'] = generateCode('U',Designations::class);
-    //  $initialData['user'] = User::whereNot('role', null)->with('designation','areas','zone','district')->get();
-    //  return response()->json(['message' => 'Operation success', 'data' => $initialData]);
-
+        $user = User::where('id', $id)->first();
+        fileWithDataProcess($user, $user->profile_picture, 'profile_picture');
+        $user->designation()->delete();
+        $initialData['code'] = generateCode('U', Designations::class);
+        $initialData['user'] = User::whereNot('role', null)->with('designation', 'areas', 'zone', 'district')->get();
+        return response()->json(['message' => 'Operation success', 'data' => $initialData]);
     }
 }

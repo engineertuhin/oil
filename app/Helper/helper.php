@@ -37,6 +37,8 @@ if (!function_exists("fileWithDataProcess")) {
     {
 
         $collect = collect($data);
+     
+   
         if (isset($collect[$column]) && is_file($collect[$column])) {
             $imagePath = $collect[$column];
             $imageName = $imagePath->getClientOriginalName();
@@ -51,13 +53,16 @@ if (!function_exists("fileWithDataProcess")) {
                     unlink('images/' . $oldName);
                 }
             }
+     
         } else {
+          
             $prepared = $collect->except($column);
+         
         }
-
+   
         if (isset($collect[$column])  && empty($collect[$column]) &&  $oldName) {
-            dd('ok');
-            if ($oldName) {
+  
+            if (!empty($oldName)) {
                 if (file_exists('images/' . $oldName)) {
                     unlink('images/' . $oldName);
                 }
