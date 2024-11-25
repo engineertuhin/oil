@@ -10,9 +10,10 @@ import { classNames } from "primereact/utils";
 import { Button } from "primereact/button";
 import { useClient } from "@/Hooks/useClient";
 import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
-import { Calendar } from "primereact/calendar";
-import { Dropdown } from "primereact/dropdown";
 
+import { Dropdown } from "primereact/dropdown";
+import { MultiSelect } from "primereact/multiselect";
+import { InputTextarea } from "primereact/inputtextarea";
 export default function Client({ auth, initialData }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
@@ -21,15 +22,16 @@ export default function Client({ auth, initialData }) {
         client,
         gender,
         type,
+        designation,
         district,
-        getArea,
+        getDistrict,
         area,
-        getZone,
+        getArea,
         zone,
-        setArea,
-        setZone,
         handleSave,
         handleDelete,
+        zoneWise,
+        users,
     } = useClient(initialData, toast);
     const {
         control,
@@ -37,6 +39,7 @@ export default function Client({ auth, initialData }) {
         handleSubmit,
         reset,
         watch,
+        setValue,
     } = useForm({});
 
     // Active button
@@ -48,22 +51,30 @@ export default function Client({ auth, initialData }) {
                     className="p-button-rounded  mr-2 p-button-sm h-10 w-10"
                     onClick={() => {
                         getArea(rowData?.district_id);
-                        getZone(rowData?.area_id);
+                        getDistrict(rowData?.zone_id);
+
                         reset({
                             name: rowData.name || "",
                             code: rowData.code || "",
                             number: rowData.number || "",
                             id: rowData.id || "",
                             nid: rowData.nid || "",
+                            store_name: rowData.store_name || "",
+                            store_representative:
+                                rowData.store_representative || "",
+                            user_id: Number(rowData.user_id) || "",
                             gender: rowData.gender || "",
-                            type: rowData.type || "",
+                            type:
+                                rowData.client_hierarchies_attach.map(
+                                    (item) => item.id
+                                ) || "",
                             district_id: rowData.district_id || "",
                             area_id: Number(rowData.area_id) || "",
                             zone_id: rowData.zone_id || "",
                             profile_picture: rowData.profile_picture || "",
+                            address: rowData.address,
                         });
                         setPreview(false);
-
                         setModel(true);
                     }}
                 />
@@ -89,7 +100,6 @@ export default function Client({ auth, initialData }) {
         for (const key in data) {
             formData.append(key, data[key]);
         }
-
         await handleSave(formData);
         if (!data.id) {
             reset({
@@ -103,8 +113,11 @@ export default function Client({ auth, initialData }) {
                 district_id: "",
                 area_id: "",
                 zone_id: "",
+                store_name: "",
+                store_representative: "",
+                user_id: "",
+                address: "",
             });
-            setPreview(false);
         }
     };
 
@@ -141,7 +154,14 @@ export default function Client({ auth, initialData }) {
                         <Column
                             field="type"
                             alignHeader="center"
-                            header="type"
+                            header="Type"
+                            body={(item) => {
+                                return item?.client_hierarchies_attach
+                                    ?.map((data) => {
+                                        return data.name;
+                                    })
+                                    .join(", ");
+                            }}
                             bodyClassName="text-center"
                             style={{ width: "14rem" }}
                         ></Column>
@@ -180,6 +200,10 @@ export default function Client({ auth, initialData }) {
                             district_id: "",
                             area_id: "",
                             zone_id: "",
+                            store_name: "",
+                            store_representative: "",
+                            user_id: '',
+                            address: '',
                         });
                         setPreview(false);
                     }}
@@ -338,7 +362,7 @@ export default function Client({ auth, initialData }) {
                                             "p-error": errors.number,
                                         })}
                                     >
-                                        Number*
+                                        Phone Number*
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "number")}
@@ -406,6 +430,67 @@ export default function Client({ auth, initialData }) {
                                 {getFormErrorMessage(errors, "gender")}
                             </div>
 
+                            {/* Store Field */}
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="store_name"
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <InputText
+                                                id={field.name}
+                                                {...field}
+                                                className={classNames({
+                                                    "p-invalid":
+                                                        fieldState.invalid,
+                                                })}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="store"
+                                        className={classNames({
+                                            "p-error": errors.nid,
+                                        })}
+                                    >
+                                        Store Name
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "store_name")}
+                            </div>
+
+                            {/* Store representative Field */}
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="store_representative"
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <InputText
+                                                id={field.name}
+                                                {...field}
+                                                className={classNames({
+                                                    "p-invalid":
+                                                        fieldState.invalid,
+                                                })}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="store_representative"
+                                        className={classNames({
+                                            "p-error": errors.nid,
+                                        })}
+                                    >
+                                        Store representative
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(
+                                    errors,
+                                    "store_representative"
+                                )}
+                            </div>
+
                             {/* type Field */}
                             <div className="field col-span-4">
                                 <span className="p-float-label">
@@ -416,13 +501,13 @@ export default function Client({ auth, initialData }) {
                                             required: "type is required.",
                                         }}
                                         render={({ field, fieldState }) => (
-                                            <Dropdown
+                                            <MultiSelect
                                                 options={type}
                                                 {...field}
                                                 optionLabel="name"
+                                                optionValue="id"
                                                 filter
-                                                showClear
-                                                filterBy="name"
+                                                maxSelectedLabels={2}
                                                 placeholder="Select a type"
                                             />
                                         )}
@@ -439,6 +524,80 @@ export default function Client({ auth, initialData }) {
                                 {getFormErrorMessage(errors, "type")}
                             </div>
 
+                            {/* User Field */}
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="user_id"
+                                        control={control}
+                                        rules={{
+                                            required: "User is required.",
+                                        }}
+                                        render={({ field, fieldState }) => (
+                                            <Dropdown
+                                                options={users}
+                                                value={field.value}
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                }}
+                                                optionLabel="name"
+                                                optionValue="id"
+                                                filter
+                                                showClear
+                                                filterBy="name"
+                                                placeholder="Select a User"
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="user"
+                                        className={classNames({
+                                            "p-error": errors.zone_id,
+                                        })}
+                                    >
+                                        User *
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "user_id")}
+                            </div>
+
+                            {/*area  Field */}
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="zone_id"
+                                        control={control}
+                                        rules={{
+                                            required: "Area is required.",
+                                        }}
+                                        render={({ field, fieldState }) => (
+                                            <Dropdown
+                                                value={field.value}
+                                                options={zone}
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                    setValue("district_id", []);
+                                                    setValue("area_id", []);
+                                                    getDistrict(e.value);
+                                                }}
+                                                maxSelectedLabels={2}
+                                                optionLabel="name"
+                                                optionValue="id"
+                                                filter
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="zone_id"
+                                        className={classNames({
+                                            "p-error": errors.area_id,
+                                        })}
+                                    >
+                                        Zone *
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "zone_id")}
+                            </div>
                             {/* District Field */}
                             <div className="field col-span-4">
                                 <span className="p-float-label">
@@ -453,10 +612,9 @@ export default function Client({ auth, initialData }) {
                                                 options={district}
                                                 value={field.value}
                                                 onChange={(e) => {
-                                                    setArea([]);
-                                                    setZone([]);
                                                     field.onChange(e.value);
-                                                    getZone(e.value);
+                                                    setValue("area_id", []);
+                                                    getArea(e.value);
                                                 }}
                                                 optionLabel="name"
                                                 optionValue="id"
@@ -483,60 +641,21 @@ export default function Client({ auth, initialData }) {
                             <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
-                                        name="zone_id"
-                                        control={control}
-                                        rules={{
-                                            required: "Area is required.",
-                                        }}
-                                        render={({ field, fieldState }) => (
-                                            <Dropdown
-                                                options={zone}
-                                                value={field.value}
-                                                onChange={(e) => {
-                                                    setArea([]);
-                                                    field.onChange(e.value);
-                                                    getArea(e.value);
-                                                }}
-                                                optionLabel="name"
-                                                optionValue="id"
-                                                filter
-                                                showClear
-                                                filterBy="name"
-                                                placeholder="Select an Area"
-                                            />
-                                        )}
-                                    />
-                                    <label
-                                        htmlFor="zone_id"
-                                        className={classNames({
-                                            "p-error": errors.area_id,
-                                        })}
-                                    >
-                                        Zone
-                                    </label>
-                                </span>
-                                {getFormErrorMessage(errors, "zone_id")}
-                            </div>
-
-                            {/* Area Field */}
-                            <div className="field col-span-4">
-                                <span className="p-float-label">
-                                    <Controller
                                         name="area_id"
                                         control={control}
                                         render={({ field, fieldState }) => (
                                             <Dropdown
                                                 options={area}
                                                 value={field.value}
-                                                onChange={(e) =>
-                                                    field.onChange(e.value)
-                                                }
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                }}
                                                 optionLabel="name"
                                                 optionValue="id"
                                                 filter
                                                 showClear
                                                 filterBy="name"
-                                                placeholder="Select an zone"
+                                                placeholder="Select a District"
                                             />
                                         )}
                                     />
@@ -550,6 +669,30 @@ export default function Client({ auth, initialData }) {
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "area_id")}
+                            </div>
+                            {/* Address Field */}
+                            <div className="field col-span-12">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="address"
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <InputTextarea
+                                                rows={3}
+                                                {...field}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="address"
+                                        className={classNames({
+                                            "p-error": errors.zone_id,
+                                        })}
+                                    >
+                                        Address
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "address")}
                             </div>
                         </div>
                     </form>

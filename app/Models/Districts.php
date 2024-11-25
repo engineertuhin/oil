@@ -13,4 +13,10 @@ class Districts extends Model
     public function zone(){
         return $this->belongsTo(Zone::class);
     }
+    public function area(){
+        return $this->hasMany(Areas::class,'district_id');
+    }
+    public function userWiseDistrict(){
+        return $this->hasMany(userDistrict::class,'district_id');
+    }
 }

@@ -18,10 +18,13 @@ return new class extends Migration
             $table->string('number')->nullable();
             $table->string('nid')->nullable();
             $table->string('gender')->nullable();
+            $table->string('store_name')->nullable();
+            $table->string('store_representative')->nullable();
+            $table->string('user_id')->nullable();
+            $table->text('address')->nullable();
             $table->unsignedBigInteger('district_id')->nullable();
             $table->unsignedBigInteger('zone_id')->nullable();
             $table->unsignedBigInteger('area_id')->nullable();
-            $table->string('type');
             $table->string('profile_picture')->nullable();
             $table->tinyInteger('is_active')->default(1)->comment('0: Inactive, 1: Active'); // Active/Inactive field
             $table->timestamps();

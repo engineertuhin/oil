@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
+use App\Models\ClientHierarchies;
+use App\Models\Designations;
 use App\Models\Districts;
 use App\Models\User;
+use App\Models\Zone;
 use App\Service\Client\ClientService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,10 +20,13 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $initialData['designation'] = clientDesignation();
+        $initialData['designation'] = ClientHierarchies::get();
         $initialData['gender'] = gender();
-        $initialData['district'] = Districts::get();
-        $initialData['data'] = Client::orderByDesc('id')->get();
+        $initialData['zone'] = Zone::get();
+        $initialData['data'] = Client::with('clientHierarchiesAttach')->orderByDesc('id')->get();
+        $initialData['user'] = User::orderByDesc('id')->with(['designation' => function ($quarry) {
+            $quarry->whereNot('level', 1);
+        }])->get();
 
         return Inertia::render('Client/Client', compact('initialData'));
     }
@@ -39,7 +45,7 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         ClientService::useStore(filterRequest());
-        return response()->json(['message' => 'Operation success', 'data' =>  Client::orderByDesc('id')->get()]);
+        return response()->json(['message' => 'Operation success', 'data' =>  Client::with('clientHierarchiesAttach')->orderByDesc('id')->get()]);
     }
 
     /**
@@ -71,10 +77,9 @@ class ClientController extends Controller
      */
     public function destroy(string $id)
     {
-     $user=Client::find($id);
-     fileWithDataProcess($user,$user->profile_picture,'profile_picture');
-     $user->delete();
-     return response()->json(['message' => 'Operation success', 'data' => Client::orderByDesc('id')->get()]);
-
+        $user = Client::find($id);
+        fileWithDataProcess($user, $user->profile_picture, 'profile_picture');
+        $user->delete();
+        return response()->json(['message' => 'Operation success', 'data' => Client::with('clientHierarchiesAttach')->orderByDesc('id')->get()]);
     }
 }

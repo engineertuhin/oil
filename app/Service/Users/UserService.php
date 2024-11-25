@@ -16,9 +16,8 @@ class UserService
             $prepared['role'] = 1; //after adding  just give static  value
             $prepared['is_active'] = 1; //after adding  just give static  value
             $prepared['last_login_at'] = now();
-            $onlyUserTable = ['name', 'email', 'password', 'profile_picture', 'role', 'is_active', 'last_login_at'];
-
-
+            $prepared['place_status'] = isset($prepared['zone_id'], $prepared['district_id'], $prepared['area_id']) ? 3 : (isset($prepared['zone_id'], $prepared['district_id']) ? 2 : 1);
+            $onlyUserTable = ['name', 'email', 'password', 'profile_picture', 'role', 'is_active', 'last_login_at', 'place_status'];
             isset($prepared['password']) ?   $prepared['password'] = Hash::make($prepared['password']) :  array_diff($onlyUserTable, ['password']);
             $user =  User::updateOrCreate(
                 ['id' => $data['id'] ?? null],

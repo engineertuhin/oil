@@ -12,7 +12,7 @@ import { useUser } from "@/Hooks/useUser";
 import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
-import { AutoComplete } from "primereact/autocomplete";
+
 import { MultiSelect } from "primereact/multiselect";
 
 export default function User({ auth, initialData }) {
@@ -642,7 +642,7 @@ export default function User({ auth, initialData }) {
                                 )}
                             </div>
 
-                            {/*area  Field */}
+                            {/*zone  Field */}
                             <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
@@ -688,9 +688,7 @@ export default function User({ auth, initialData }) {
                                     <Controller
                                         name="district_id"
                                         control={control}
-                                        rules={{
-                                            required: "District is required.",
-                                        }}
+                                       
                                         render={({ field, fieldState }) => (
                                             <MultiSelect
                                                 options={district}
@@ -719,7 +717,7 @@ export default function User({ auth, initialData }) {
                                             "p-error": errors.district_id,
                                         })}
                                     >
-                                        District*
+                                        District
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "district_id")}

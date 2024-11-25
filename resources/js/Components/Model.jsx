@@ -42,7 +42,9 @@ export default function Model({
             className="p-fluid"
             footer={productDialogFooter}
             onHide={() => {
+                resetData();
                 setModel(false);
+         
             }}
         >
             {children}

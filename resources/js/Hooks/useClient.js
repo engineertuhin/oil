@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { getAreaService, getZoneService } from "@/Services/getPlaceService";
+import { getDistrictService, getAreaService } from "@/Services/getPlaceService";
 import { saveUser, deleteUser } from "@/Services/clientService";
 
 export const useClient = (initialData, toast) => {
     const [client, setClient] = useState(initialData.data);
     const [gender, setGender] = useState(initialData.gender);
     const [type, setType] = useState(initialData.designation);
-    const [district, setDistrict] = useState(initialData.district);
+    const [users, serUsers] = useState(initialData.user);
+    const [district, setDistrict] = useState([]);
     const [area, setArea] = useState([]);
-    const [zone, setZone] = useState([]);
+    const [zone, setZone] = useState(initialData.zone);
 
     const handleSave = async (data) => {
         const res = await saveUser(data);
@@ -33,28 +34,30 @@ export const useClient = (initialData, toast) => {
         });
     };
 
-    const getArea = async (id) => {
-        const res = await getAreaService(id);
+    const getDistrict = async (ids) => {
+
+      
+        const res = await getDistrictService(JSON.stringify([ids]));
+        setDistrict(res);
+    };
+    const getArea = async (ids) => {
+        const res = await getAreaService(JSON.stringify([ids]));
         setArea(res);
     };
-    const getZone = async (id) => {
-        const res = await getZoneService(id);
-        setZone(res);
-    };
-
     return {
         client,
         gender,
         type,
         district,
-        getArea,
+        getDistrict,
         area,
-        getZone,
+        getArea,
         zone,
-        setArea,
         setZone,
+        setArea,
         handleSave,
         handleDelete,
+        users,
         toast,
     };
 };

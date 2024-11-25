@@ -12,4 +12,8 @@ class Areas extends Model
     public function district(){
         return $this->belongsTo(Districts::class);
     }
+
+    public function userWiseArea(){
+        return $this->hasMany(userArea::class,'area_id');
+    }
 }

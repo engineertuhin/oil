@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('profile_picture')->nullable();
             $table->integer('role')->nullable();
             $table->integer('is_active')->default(0);
+            $table->integer('place_status')->nullable();
             $table->string('last_login_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
