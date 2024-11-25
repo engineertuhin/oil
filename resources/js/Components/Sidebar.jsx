@@ -52,12 +52,12 @@ export default function Sidebar() {
                 />
             </NavLink>
             <NavLink
-                label={"Dealer/Customer"}
+                label={"Customer"}
                 active={route().current("client.index")}
                 icon="fa-solid fa-user-group"
             >
                 <NavChild
-                    label="Dealer/Customer"
+                    label="Customer"
                     routePath={"client.index"}
                     active={route().current("client.index")}
                 />

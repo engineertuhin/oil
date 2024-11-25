@@ -75,11 +75,12 @@ class UserController extends Controller
     public function destroy(string $id)
     {
      $user=User::find($id);
-     $initialData['code'] = generateCode('U',Designations::class);
-     $initialData['user'] = User::whereNot('role', null)->with('designation','areas','zone','district')->get();
+
      fileWithDataProcess($user,$user->profile_picture,'profile_picture');
-     $user->delete();
-     return response()->json(['message' => 'Operation success', 'data' => $initialData]);
+    //  $user->delete();
+    //  $initialData['code'] = generateCode('U',Designations::class);
+    //  $initialData['user'] = User::whereNot('role', null)->with('designation','areas','zone','district')->get();
+    //  return response()->json(['message' => 'Operation success', 'data' => $initialData]);
 
     }
 }

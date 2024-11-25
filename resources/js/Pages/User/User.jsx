@@ -31,6 +31,8 @@ export default function User({ auth, initialData }) {
         handleSave,
         handleDelete,
         resetForm,
+        setCode,
+        code,
     } = useUser(initialData, toast);
 
     const {
@@ -40,11 +42,7 @@ export default function User({ auth, initialData }) {
         reset,
         watch,
         setValue,
-    } = useForm({
-        defaultValues: {
-            code: initialData.code,
-        },
-    });
+    } = useForm({});
 
     // Active button
     const actionBodyTemplate = (rowData) => {
@@ -107,9 +105,9 @@ export default function User({ auth, initialData }) {
         if (!confirm("Are you sure you want to delete this?")) return;
         await handleDelete(id);
         let newCode = await handleDelete(id);
-        reset({
-            code: newCode,
-        });
+
+        setCode(newCode);
+        reset(resetForm({ code: newCode }));
     };
 
     // Insert or Update
@@ -119,8 +117,10 @@ export default function User({ auth, initialData }) {
             formData.append(key, data[key]);
         }
         let newCode = await handleSave(formData);
+
         if (!data.id) {
-            resetForm({ code: initialData.code });
+            setCode(newCode);
+            reset(resetForm({ code: newCode }));
             setPreview(false);
         }
     };
@@ -146,7 +146,7 @@ export default function User({ auth, initialData }) {
                         addbuttom="Add User"
                         model={() => {
                             setModel(true);
-                            resetForm({ code: initialData.code });
+                            reset(resetForm({ code: code }));
                         }}
                     >
                         <Column
@@ -186,7 +186,7 @@ export default function User({ auth, initialData }) {
                     setModel={setModel}
                     title="User Add"
                     resetData={() => {
-                        reset(resetForm({ code: initialData.code }));
+                        reset(resetForm({ code: code }));
                     }}
                 >
                     <form

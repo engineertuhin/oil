@@ -56,6 +56,7 @@ if (!function_exists("fileWithDataProcess")) {
         }
 
         if (isset($collect[$column])  && empty($collect[$column]) &&  $oldName) {
+            dd('ok');
             if ($oldName) {
                 if (file_exists('images/' . $oldName)) {
                     unlink('images/' . $oldName);

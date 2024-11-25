@@ -9,6 +9,7 @@ export const useUser = (initialData, toast) => {
     const [district, setDistrict] = useState([]);
     const [area, setArea] = useState([]);
     const [zone, setZone] = useState(initialData.zone);
+    const [code, setCode] = useState(initialData.code);
 
     const handleSave = async (data) => {
         const res = await saveUser(data);
@@ -48,7 +49,7 @@ export const useUser = (initialData, toast) => {
     const resetForm = (form = {}) => {
         return {
             name: form.name || "",
-            code: form.code || "", // Dynamically set code
+            code: form.code || "",
             number: form.number || "",
             id: form.id || "",
             email: form.email || "",
@@ -79,6 +80,8 @@ export const useUser = (initialData, toast) => {
         handleSave,
         handleDelete,
         resetForm,
+        setCode,
+        code,
         toast,
     };
 };
