@@ -64,14 +64,10 @@ export default function Client({ auth, initialData }) {
                                 rowData.store_representative || "",
                             user_id: Number(rowData.user_id) || "",
                             gender: rowData.gender || "",
-<<<<<<< HEAD
                             type:
                                 rowData.client_hierarchies_attach.map(
                                     (item) => item.id
                                 ) || "",
-=======
-                            type: rowData.type || "",
->>>>>>> 18917c45057813820fe18b59311c46a49ac76626
                             district_id: rowData.district_id || "",
                             area_id: Number(rowData.area_id) || "",
                             zone_id: rowData.zone_id || "",
@@ -102,14 +98,8 @@ export default function Client({ auth, initialData }) {
     const onSubmit = async (data) => {
         const formData = new FormData();
         for (const key in data) {
-<<<<<<< HEAD
             formData.append(key, data[key]);
         }
-=======
-            formData.append(key, JSON.stringify(data[key]));
-        }
-
->>>>>>> 18917c45057813820fe18b59311c46a49ac76626
         await handleSave(formData);
         if (!data.id) {
             reset({

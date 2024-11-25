@@ -12,7 +12,6 @@ import { useUser } from "@/Hooks/useUser";
 import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
-
 import { MultiSelect } from "primereact/multiselect";
 
 export default function User({ auth, initialData }) {
@@ -32,6 +31,9 @@ export default function User({ auth, initialData }) {
         handleSave,
         handleDelete,
     } = useUser(initialData, toast);
+
+
+    
     const {
         control,
         formState: { errors },
@@ -47,11 +49,10 @@ export default function User({ auth, initialData }) {
     });
 
     // Reset Data
-
     const restForm = () =>{
         return {
             name: "",
-            code: initialData.user_designation.code,
+            code: initialData.code,
             number: "",
             id: "",
             email: "",
