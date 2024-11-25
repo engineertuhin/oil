@@ -16,12 +16,11 @@ class ClientService
         DB::transaction(function () use ($data) {
 
             $data = array_filter($data, fn($value) => $value !== "undefined");
-
             $prepared = fileWithDataProcess($data, false, 'profile_picture');
             $prepared['is_active'] = 1;
             $client =  Client::updateOrCreate(
                 ['id' => $data['id'] ?? null],
-                $prepared->toArray()
+                $prepared->except('type')->toArray()
             );
             $client->clientHierarchiesAttach()->sync(explode(',',$prepared['type']));
         });

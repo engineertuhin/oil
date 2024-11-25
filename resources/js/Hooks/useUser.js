@@ -27,7 +27,6 @@ export const useUser = (initialData, toast) => {
     const handleDelete = async (id) => {
         const res = await deleteUser(id);
         setUser(res.data.user);
-
         toast.current.show({
             severity: "info",
             summary: "Confirmed",
