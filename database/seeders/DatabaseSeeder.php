@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\EmployHierarchy;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,6 +22,13 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => Hash::make('123'),
         
+        ]);
+        $this->call([
+            ZonesTableSeeder::class, 
+            DistrictsTableSeeder::class, 
+            AreasTableSeeder::class, 
+            EmployHierarchiesTableSeeder::class,
+            ClientHierarchiesSeeder::class
         ]);
     }
 }

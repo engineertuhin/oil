@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Places;
 
 use App\Http\Controllers\Controller;
+use App\Models\Districts;
+use App\Models\Zone;
+use App\Service\Districts\DistrictsService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,23 +16,22 @@ class DistrictController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Auth/Login');
+        $initialData['districts'] = Districts::orderByDesc('id')->with('zone')->get();
+        $initialData['zone'] = Zone::orderByDesc('id')->get();
+        return Inertia::render('Place/Districts/Districts', compact('initialData'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        // 
+
+        DistrictsService::store(filterRequest());
+        $getData = Districts::orderByDesc('id')->with('zone')->get();
+        return response()->json(['message' => 'Operation success', 'data' => $getData]);
     }
 
     /**
@@ -61,6 +63,8 @@ class DistrictController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Districts::find($id)->delete();
+        $getData = Districts::orderByDesc('id')->with('zone')->get();
+        return response()->json(['message' => 'Operation success', 'data' => $getData]);
     }
 }

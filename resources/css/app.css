@@ -1,14 +1,12 @@
-
 @layer tailwind-base, primereact, tailwind-utilities;
 
-
 @layer tailwind-base {
-  @tailwind base;
+    @tailwind base;
 }
 
 @layer tailwind-utilities {
-  @tailwind components;
-  @tailwind utilities;
+    @tailwind components;
+    @tailwind utilities;
 }
 
 @layer base {
@@ -18,4 +16,18 @@
     }
 }
 
+.p-datatable-header {
+    background-color: transparent;
+    border: none;
+}
+/* .p-datatable-table{
+  padding: 30px;
+} */
+.p-datatable-thead {
+    padding: 30px;
+}
 
+.p-float-label{
+  border: 1px solid #1819197a;
+  border-radius: 7px;
+}

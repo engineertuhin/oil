@@ -10,17 +10,68 @@ export default function Sidebar() {
                 label={"Dashboard"}
                 url={"/"}
                 active={route().current("dashboard")}
-                icone="fa-solid fa-chart-line"
+                icon="fa-solid fa-chart-line"
             />
 
-            {/* Dashboard */}
-            <NavLink label={"Places"} icone="fa-solid fa-location-dot">
+            {/* Place Section */}
+            <NavLink
+                label={"Places"}
+                active={
+                    route().current("districts.index") ||
+                    route().current("areas.index") ||
+                    route().current("zone.index")
+                }
+                icon="fa-solid fa-location-dot"
+            >
                 <NavChild
-                    lable="Districts"
-                    route={"districts"}
-                    active={route().current("brand.index")}
+                    label="Zone"
+                    routePath={"zone.index"}
+                    active={route().current("zone.index")}
                 />
-
+                <NavChild
+                    label="Districts"
+                    routePath={"districts.index"}
+                    active={route().current("districts.index")}
+                />
+                <NavChild
+                    label="Areas"
+                    routePath={"areas.index"}
+                    active={route().current("areas.index")}
+                />
+            </NavLink>
+            {/* Place Section */}
+            <NavLink
+                label={"Users"}
+                active={route().current("user.index")}
+                icon="fa-solid fa-user-plus"
+            >
+                <NavChild
+                    label="User"
+                    routePath={"user.index"}
+                    active={route().current("user.index")}
+                />
+            </NavLink>
+            <NavLink
+                label={"Dealer/Customer"}
+                active={route().current("client.index")}
+                icon="fa-solid fa-user-group"
+            >
+                <NavChild
+                    label="Dealer/Customer"
+                    routePath={"client.index"}
+                    active={route().current("client.index")}
+                />
+            </NavLink>
+            <NavLink
+                label={"Report"}
+                active={route().current("organography")}
+                icon="fa-solid fa-clipboard-list"
+            >
+                <NavChild
+                    label="Organogram"
+                    routePath={"organography"}
+                    active={route().current("organography")}
+                />
             </NavLink>
         </ul>
     );
