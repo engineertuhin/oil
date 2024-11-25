@@ -12,25 +12,13 @@ import { useUser } from "@/Hooks/useUser";
 import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
-<<<<<<< HEAD
 
 import { MultiSelect } from "primereact/multiselect";
 
-=======
-import { MultiSelect } from "primereact/multiselect";
-
-
->>>>>>> 18917c45057813820fe18b59311c46a49ac76626
 export default function User({ auth, initialData }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
     const [HierarchyPrevent, setHierarchyPrevent] = useState(false);
-
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 18917c45057813820fe18b59311c46a49ac76626
     const [preview, setPreview] = useState(false);
     const {
         user,
