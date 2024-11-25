@@ -10,7 +10,6 @@ export const useUser = (initialData, toast) => {
     const [area, setArea] = useState([]);
     const [zone, setZone] = useState(initialData.zone);
 
-
     const handleSave = async (data) => {
         const res = await saveUser(data);
         setUser(res.data.user);
@@ -27,7 +26,7 @@ export const useUser = (initialData, toast) => {
     const handleDelete = async (id) => {
         const res = await deleteUser(id);
         setUser(res.data.user);
-        
+
         toast.current.show({
             severity: "info",
             summary: "Confirmed",
@@ -45,7 +44,26 @@ export const useUser = (initialData, toast) => {
         const res = await getAreaService(JSON.stringify(ids));
         setArea(res);
     };
-
+    // Reset Data
+    const resetForm = (form = {}) => {
+        return {
+            name: form.name || "",
+            code: form.code || "", // Dynamically set code
+            number: form.number || "",
+            id: form.id || "",
+            email: form.email || "",
+            password: form.password || "",
+            nid: form.nid || "",
+            date_of_birth: form.date_of_birth || "",
+            join_date: form.join_date || "",
+            discontinue: form.discontinue || "",
+            gender: form.gender || "",
+            employ_hierarchies_id: form.employ_hierarchies_id || "",
+            district_id: form.district_id || "",
+            area_id: form.area_id || "",
+            zone_id: form.zone_id || "",
+        };
+    };
 
     return {
         user,
@@ -60,6 +78,7 @@ export const useUser = (initialData, toast) => {
         setArea,
         handleSave,
         handleDelete,
+        resetForm,
         toast,
     };
 };

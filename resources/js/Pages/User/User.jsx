@@ -30,6 +30,7 @@ export default function User({ auth, initialData }) {
         zone,
         handleSave,
         handleDelete,
+        resetForm,
     } = useUser(initialData, toast);
 
     const {
@@ -44,27 +45,6 @@ export default function User({ auth, initialData }) {
             code: initialData.code,
         },
     });
-
-    // Reset Data
-    const restForm = () => {
-        return {
-            name: "",
-            code: initialData.code,
-            number: "",
-            id: "",
-            email: "",
-            password: "",
-            nid: "",
-            date_of_birth: "",
-            join_date: "",
-            discontinue: "",
-            gender: "",
-            employ_hierarchies_id: "",
-            district_id: "",
-            area_id: "",
-            zone_id: "",
-        };
-    };
 
     // Active button
     const actionBodyTemplate = (rowData) => {
@@ -140,23 +120,7 @@ export default function User({ auth, initialData }) {
         }
         let newCode = await handleSave(formData);
         if (!data.id) {
-            reset({
-                name: "",
-                code: newCode,
-                number: "",
-                id: "",
-                email: "",
-                password: "",
-                nid: "",
-                date_of_birth: "",
-                join_date: "",
-                discontinue: "",
-                gender: "",
-                employ_hierarchies_id: "",
-                district_id: "",
-                area_id: "",
-                zone_id: "",
-            });
+            resetForm({ code: initialData.code });
             setPreview(false);
         }
     };
@@ -180,9 +144,9 @@ export default function User({ auth, initialData }) {
                     <DataTable
                         data={user}
                         addbuttom="Add User"
-                        model={() =>{
+                        model={() => {
                             setModel(true);
-                            restForm()
+                            resetForm({ code: initialData.code });
                         }}
                     >
                         <Column
@@ -222,7 +186,7 @@ export default function User({ auth, initialData }) {
                     setModel={setModel}
                     title="User Add"
                     resetData={() => {
-                        reset(restForm());
+                        reset(resetForm({ code: initialData.code }));
                     }}
                 >
                     <form
