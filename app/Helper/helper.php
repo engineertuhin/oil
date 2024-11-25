@@ -66,3 +66,9 @@ if (!function_exists("fileWithDataProcess")) {
         return $prepared;
     }
 }
+// Generate Code
+function generateCode($prefix , $modelName, $collumName = 'code'){
+    $previousCode = $modelName::orderByDesc('id')->select($collumName)->first();
+    $code = $previousCode ? sprintf("%04d", ((int)(explode("-",$previousCode))[1] + 1))  : '0001';
+    return $prefix.'-'.$code;
+}

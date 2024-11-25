@@ -12,16 +12,25 @@ import { useUser } from "@/Hooks/useUser";
 import { getFormErrorMessage } from "@/Components/getFormErrorMessage";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
+<<<<<<< HEAD
 
 import { MultiSelect } from "primereact/multiselect";
 
+=======
+import { MultiSelect } from "primereact/multiselect";
+
+
+>>>>>>> 18917c45057813820fe18b59311c46a49ac76626
 export default function User({ auth, initialData }) {
     const toast = useRef(null);
     const [model, setModel] = useState(false);
     const [HierarchyPrevent, setHierarchyPrevent] = useState(false);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 18917c45057813820fe18b59311c46a49ac76626
     const [preview, setPreview] = useState(false);
     const {
         user,
@@ -42,7 +51,34 @@ export default function User({ auth, initialData }) {
         reset,
         watch,
         setValue,
-    } = useForm({});
+    } = useForm({
+        defaultValues: {
+            code: initialData.code,
+            
+        } 
+    });
+
+    // Reset Data
+
+    const restForm = () =>{
+        return {
+            name: "",
+            code: initialData.user_designation.code,
+            number: "",
+            id: "",
+            email: "",
+            password: "",
+            nid: "",
+            date_of_birth: "",
+            join_date: "",
+            discontinue: '',
+            gender: "",
+            employ_hierarchies_id: "",
+            district_id: "",
+            area_id: "",
+            zone_id: "",
+        }
+    }
 
     // Active button
     const actionBodyTemplate = (rowData) => {
@@ -71,7 +107,7 @@ export default function User({ auth, initialData }) {
                             join_date:
                                 new Date(rowData.designation.date_of_birth) ||
                                 "",
-                            discontinue: 
+                            discontinue:
                                 new Date(rowData.designation.discontinue) ||
                                 "",
                             gender: rowData.designation.gender || "",
@@ -106,6 +142,11 @@ export default function User({ auth, initialData }) {
     const dataDelete = async (id) => {
         if (!confirm("Are you sure you want to delete this?")) return;
         await handleDelete(id);
+
+        let newCode = await handleDelete(id);
+        reset({
+            code: newCode,
+        });
     };
 
     // Insert or Update
@@ -114,11 +155,11 @@ export default function User({ auth, initialData }) {
         for (const key in data) {
             formData.append(key, data[key]);
         }
-        await handleSave(formData);
+        let newCode = await handleSave(formData);
         if (!data.id) {
             reset({
                 name: "",
-                code: "",
+                code: newCode,
                 number: "",
                 id: "",
                 email: "",
@@ -195,24 +236,8 @@ export default function User({ auth, initialData }) {
                     setModel={setModel}
                     title="User Add"
                     resetData={() => {
-                        reset({
-                            name: "",
-                            code: "",
-                            number: "",
-                            id: "",
-                            email: "",
-                            password: "",
-                            nid: "",
-                            date_of_birth: "",
-                            join_date: "",
-                            discontinue: '',
-                            gender: "",
-                            employ_hierarchies_id: "",
-                            district_id: "",
-                            area_id: "",
-                            zone_id: "",
-                        });
-                        setPreview(false);
+                        reset(restForm());
+                    
                     }}
                 >
                     <form
@@ -237,11 +262,11 @@ export default function User({ auth, initialData }) {
                                                             preview
                                                                 ? preview
                                                                 : window
-                                                                      .location
-                                                                      .origin +
-                                                                  `/images/${watch(
-                                                                      "profile_picture"
-                                                                  )}`
+                                                                    .location
+                                                                    .origin +
+                                                                `/images/${watch(
+                                                                    "profile_picture"
+                                                                )}`
                                                         }
                                                         alt="Profile"
                                                         className="w-full h-full object-cover rounded-full"
@@ -318,7 +343,7 @@ export default function User({ auth, initialData }) {
                                         name="code"
                                         control={control}
                                         render={({ field, fieldState }) => (
-                                            <InputText
+                                            <InputText readOnly={true}
                                                 id={field.name}
                                                 {...field}
                                                 className={classNames({
@@ -688,7 +713,6 @@ export default function User({ auth, initialData }) {
                                     <Controller
                                         name="district_id"
                                         control={control}
-                                       
                                         render={({ field, fieldState }) => (
                                             <MultiSelect
                                                 options={district}
