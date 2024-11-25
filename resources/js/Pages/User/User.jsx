@@ -32,8 +32,6 @@ export default function User({ auth, initialData }) {
         handleDelete,
     } = useUser(initialData, toast);
 
-
-    
     const {
         control,
         formState: { errors },
@@ -44,12 +42,11 @@ export default function User({ auth, initialData }) {
     } = useForm({
         defaultValues: {
             code: initialData.code,
-            
-        } 
+        },
     });
 
     // Reset Data
-    const restForm = () =>{
+    const restForm = () => {
         return {
             name: "",
             code: initialData.code,
@@ -60,14 +57,14 @@ export default function User({ auth, initialData }) {
             nid: "",
             date_of_birth: "",
             join_date: "",
-            discontinue: '',
+            discontinue: "",
             gender: "",
             employ_hierarchies_id: "",
             district_id: "",
             area_id: "",
             zone_id: "",
-        }
-    }
+        };
+    };
 
     // Active button
     const actionBodyTemplate = (rowData) => {
@@ -97,16 +94,14 @@ export default function User({ auth, initialData }) {
                                 new Date(rowData.designation.date_of_birth) ||
                                 "",
                             discontinue:
-                                new Date(rowData.designation.discontinue) ||
-                                "",
+                                new Date(rowData.designation.discontinue) || "",
                             gender: rowData.designation.gender || "",
                             employ_hierarchies_id:
                                 Number(
                                     rowData.designation.employ_hierarchies_id
                                 ) || "",
                             district_id:
-                                rowData.district.map((item) => item.id) ||
-                                "",
+                                rowData.district.map((item) => item.id) || "",
 
                             zone_id: rowData.zone.map((item) => item.id) || "",
                             profile_picture: rowData.profile_picture || "",
@@ -131,7 +126,6 @@ export default function User({ auth, initialData }) {
     const dataDelete = async (id) => {
         if (!confirm("Are you sure you want to delete this?")) return;
         await handleDelete(id);
-
         let newCode = await handleDelete(id);
         reset({
             code: newCode,
@@ -156,7 +150,7 @@ export default function User({ auth, initialData }) {
                 nid: "",
                 date_of_birth: "",
                 join_date: "",
-                discontinue: '',
+                discontinue: "",
                 gender: "",
                 employ_hierarchies_id: "",
                 district_id: "",
@@ -186,7 +180,10 @@ export default function User({ auth, initialData }) {
                     <DataTable
                         data={user}
                         addbuttom="Add User"
-                        model={setModel}
+                        model={() =>{
+                            setModel(true);
+                            restForm()
+                        }}
                     >
                         <Column
                             field="name"
@@ -226,7 +223,6 @@ export default function User({ auth, initialData }) {
                     title="User Add"
                     resetData={() => {
                         reset(restForm());
-                    
                     }}
                 >
                     <form
@@ -251,11 +247,11 @@ export default function User({ auth, initialData }) {
                                                             preview
                                                                 ? preview
                                                                 : window
-                                                                    .location
-                                                                    .origin +
-                                                                `/images/${watch(
-                                                                    "profile_picture"
-                                                                )}`
+                                                                      .location
+                                                                      .origin +
+                                                                  `/images/${watch(
+                                                                      "profile_picture"
+                                                                  )}`
                                                         }
                                                         alt="Profile"
                                                         className="w-full h-full object-cover rounded-full"
@@ -332,7 +328,8 @@ export default function User({ auth, initialData }) {
                                         name="code"
                                         control={control}
                                         render={({ field, fieldState }) => (
-                                            <InputText readOnly={true}
+                                            <InputText
+                                                readOnly={true}
                                                 id={field.name}
                                                 {...field}
                                                 className={classNames({
