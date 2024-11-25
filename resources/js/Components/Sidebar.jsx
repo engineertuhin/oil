@@ -63,6 +63,17 @@ export default function Sidebar() {
                 />
             </NavLink>
             <NavLink
+                label={"Service Providers"}
+                active={route().current("client.index")}
+                icon="fa-solid fa-business-time"
+            >
+                <NavChild
+                    label="Retailer"
+                    routePath={"client.index"}
+                    active={route().current("client.index")}
+                />
+            </NavLink>
+            <NavLink
                 label={"Report"}
                 active={route().current("organography")}
                 icon="fa-solid fa-clipboard-list"
