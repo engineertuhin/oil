@@ -13,7 +13,7 @@ class GaragesSeeder extends Seeder
      */
     public function run(): void
     {
-        $zones = [
+        $garage = [
             ['name' => 'CNG'],
             ['name' => 'Bus'],
             ['name' => 'Truck'],
@@ -21,6 +21,6 @@ class GaragesSeeder extends Seeder
             ['name' => 'Private Care'],
         ];
 
-        DB::table('zones')->insert($zones);
+        DB::table('zones')->insert($garage);
     }
 }
