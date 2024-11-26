@@ -21,6 +21,6 @@ class GaragesSeeder extends Seeder
             ['name' => 'Private Care'],
         ];
 
-        DB::table('zones')->insert($garage);
+        DB::table('garages_types')->insert($garage);
     }
 }
