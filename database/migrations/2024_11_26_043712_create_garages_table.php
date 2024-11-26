@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('retailers', function (Blueprint $table) {
+        Schema::create('garages', function (Blueprint $table) {
             $table->id();
+            $table->string('mechanic_name');
+            $table->string('phone');
+            $table->date('date_of_birth');
+            $table->date('anniversary_date');
             $table->unsignedBigInteger('client_id');
-            $table->string('name');
-            $table->string('code')->nullable();
-            $table->string('number')->nullable();
-            $table->text('address')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->integer('type');
             $table->timestamps();
-            $table->softDeletes();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('retailers');
+        Schema::dropIfExists('garages');
     }
 };

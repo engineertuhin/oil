@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
             DistrictsTableSeeder::class, 
             AreasTableSeeder::class, 
             EmployHierarchiesTableSeeder::class,
-            ClientHierarchiesSeeder::class
+            ClientHierarchiesSeeder::class,
+            GaragesSeeder::class,
         ]);
     }
 }
