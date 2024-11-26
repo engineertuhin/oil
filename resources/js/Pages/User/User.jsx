@@ -371,7 +371,7 @@ export default function User({ auth, initialData }) {
                                             "p-error": errors.code,
                                         })}
                                     >
-                                        Number
+                                        Phone Number
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "number")}
