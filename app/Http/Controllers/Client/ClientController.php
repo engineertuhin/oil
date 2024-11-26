@@ -24,6 +24,7 @@ class ClientController extends Controller
         $initialData['gender'] = gender();
         $initialData['zone'] = Zone::get();
         $initialData['data'] = Client::with('clientHierarchiesAttach')->orderByDesc('id')->get();
+        $initialData['code'] = generateCode('C', Designations::class);
         $initialData['user'] = User::orderByDesc('id')->with(['designation' => function ($quarry) {
             $quarry->whereNot('level', 1);
         }])->get();

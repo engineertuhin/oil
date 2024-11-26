@@ -123,7 +123,7 @@ export default function User({ auth, initialData }) {
             setPreview(false);
         }
     };
-
+    console.log(user)
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -139,6 +139,7 @@ export default function User({ auth, initialData }) {
                     ref={toast}
                     className="p-toast p-toast-sm text-sm p-2 rounded-md "
                 />
+                
                 <div className="card">
                     <DataTable
                         data={user}
@@ -149,7 +150,9 @@ export default function User({ auth, initialData }) {
                         }}
                     >
                         <Column
-                            field="name"
+                        body={(item)=>{
+                            return item.name+` (${item.designation.code})`;
+                        }}
                             header="Name"
                             alignHeader="center"
                             style={{ width: "14rem" }}
@@ -523,7 +526,7 @@ export default function User({ auth, initialData }) {
                                             "p-error": errors.join_date,
                                         })}
                                     >
-                                        Discontinued
+                                        Discontinued Date
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "discontinue")}
