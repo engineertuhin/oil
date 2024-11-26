@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('garages', function (Blueprint $table) {
             $table->id();
-            $table->string('mechanic_name');
+            $table->string('garage_name');
+            $table->string('proprietor_name');
             $table->string('code');
             $table->string('number')->nullable();
             $table->date('date_of_birth')->nullable();

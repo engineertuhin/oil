@@ -36,7 +36,8 @@ export const useGarage = (initialData, toast) => {
     // Reset Data
     const resetForm = (form = {}) => {
         return {
-            mechanic_name: form.mechanic_name || "",
+            garage_name: form.mechanic_name || "",
+            proprietor_name: form.proprietor_name || "",
             code: form.code || "",
             number: form.number || "",
             client_id: form.client_id || "",

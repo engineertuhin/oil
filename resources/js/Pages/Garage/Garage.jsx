@@ -47,7 +47,8 @@ export default function Garage({ auth, initialData }) {
                     className="p-button-rounded  mr-2 p-button-sm h-10 w-10"
                     onClick={() => {
                         reset({
-                            mechanic_name: rowData.mechanic_name || "",
+                            garage_name: rowData.garage_name || "",
+                            proprietor_name: rowData.proprietor_name || "",
                             code: rowData.code || "",
                             number: rowData.number || "",
                             client_id: Number(rowData.client_id) || "",
@@ -174,7 +175,7 @@ export default function Garage({ auth, initialData }) {
                             <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
-                                        name="mechanic_name"
+                                        name="garage_name"
                                         control={control}
                                         rules={{
                                             required: "Name is required.",
@@ -192,15 +193,45 @@ export default function Garage({ auth, initialData }) {
                                         )}
                                     />
                                     <label
-                                        htmlFor="mechanic_name"
+                                        htmlFor="garage_name"
                                         className={classNames({
                                             "p-error": errors.name,
                                         })}
                                     >
-                                        Mechanic name*
+                                        Garage name*
                                     </label>
                                 </span>
-                                {getFormErrorMessage(errors, "mechanic_name")}
+                                {getFormErrorMessage(errors, "garage_name")}
+                            </div>
+                             {/* Name Field */}
+                             <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="proprietor_name"
+                                        control={control}
+                                       
+                                        render={({ field, fieldState }) => (
+                                            <InputText
+                                                id={field.name}
+                                                {...field}
+                                                autoFocus
+                                                className={classNames({
+                                                    "p-invalid":
+                                                        fieldState.invalid,
+                                                })}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="proprietor_name"
+                                        className={classNames({
+                                            "p-error": errors.name,
+                                        })}
+                                    >
+                                        Proprietor name
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "proprietor_name")}
                             </div>
 
                             {/* Code Field */}
