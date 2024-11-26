@@ -7,6 +7,7 @@ use App\Http\Controllers\Places\DistrictController;
 use App\Http\Controllers\Places\PlaceController;
 use App\Http\Controllers\Places\ZoneController;
 use App\Http\Controllers\Report\ReportController;
+use App\Http\Controllers\Retailer\RetailerController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('zone', ZoneController::class);
     Route::resource('user', UserController::class);
     Route::resource('client', ClientController::class);
+    Route::resource('retailer', RetailerController::class);
 
     Route::prefix('report')->group(function () {
         Route::get('organography', [ReportController::class, 'organography'])->name('organography');

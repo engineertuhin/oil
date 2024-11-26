@@ -69,8 +69,8 @@ export default function Sidebar() {
             >
                 <NavChild
                     label="Retailer"
-                    routePath={"client.index"}
-                    active={route().current("client.index")}
+                    routePath={"retailer.index"}
+                    active={route().current("retailer.index")}
                 />
             </NavLink>
             <NavLink

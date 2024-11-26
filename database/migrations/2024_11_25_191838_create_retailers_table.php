@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('client_id');
             $table->string('name');
-            $table->string('phone')->nullable();
+            $table->string('code')->nullable();
+            $table->string('number')->nullable();
             $table->text('address')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
