@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Client\ClientController;
+use App\Http\Controllers\Garage\GarageController;
 use App\Http\Controllers\Places\AreasController;
 use App\Http\Controllers\Places\DistrictController;
 use App\Http\Controllers\Places\PlaceController;
@@ -25,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('client', ClientController::class);
     Route::resource('retailer', RetailerController::class);
+    Route::resource('garage', GarageController::class);
 
     Route::prefix('report')->group(function () {
         Route::get('organography', [ReportController::class, 'organography'])->name('organography');
