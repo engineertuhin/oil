@@ -111,6 +111,18 @@ export default function Client({ auth, initialData }) {
             setPreview(false);
         }
     };
+    // user option
+    const userOptionTemplate = (option) => {
+        return (
+            <div className="country-item">
+                <div className="flex items-center gap-2 text-sm">
+                    <h2>{option.name}</h2>
+                    <span>({option.designation.code})</span>
+                </div>
+                <p className="text-xs text-black text-opacity-35">{option.designation.employ_hierarchy.name}</p>
+            </div>
+        );
+    }
 
     return (
         <AuthenticatedLayout
@@ -184,22 +196,7 @@ export default function Client({ auth, initialData }) {
                     setModel={setModel}
                     title="Client Add"
                     resetData={() => {
-                        reset({
-                            name: "",
-                            code: "",
-                            id: "",
-                            number: "",
-                            nid: "",
-                            gender: "",
-                            type: "",
-                            district_id: "",
-                            area_id: "",
-                            zone_id: "",
-                            store_name: "",
-                            store_representative: "",
-                            user_id: '',
-                            address: '',
-                        });
+                        resetForm({code:code})
                         setPreview(false);
                     }}
                 >
@@ -542,6 +539,7 @@ export default function Client({ auth, initialData }) {
                                                 showClear
                                                 filterBy="name"
                                                 placeholder="Select a User"
+                                                itemTemplate={userOptionTemplate}
                                             />
                                         )}
                                     />
@@ -616,7 +614,7 @@ export default function Client({ auth, initialData }) {
                                                 optionValue="id"
                                                 filter
                                                 showClear
-                                                filterBy="name"
+                                                filterBy="name,id"
                                                 placeholder="Select a District"
                                             />
                                         )}

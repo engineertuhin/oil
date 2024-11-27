@@ -56,7 +56,6 @@ export const useClient = (initialData, toast) => {
 
     // Reset Data
     const resetForm = (form = {}) => {
-        console.log(form)
         return {
             name: form.name || "",
             code: form.code || "",
