@@ -112,6 +112,18 @@ export default function Client({ auth, initialData }) {
         }
     };
 
+    // User Filter
+    const UserFilter = (options, filter) => {
+        if (!filter) return options;
+
+        const filterValue = filter.toLowerCase();
+        return options.filter(
+            (option) =>
+                option.name.toLowerCase().includes(filterValue) ||
+                option.designation.name.toLowerCase().includes(filterValue)
+        );
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -197,8 +209,8 @@ export default function Client({ auth, initialData }) {
                             zone_id: "",
                             store_name: "",
                             store_representative: "",
-                            user_id: '',
-                            address: '',
+                            user_id: "",
+                            address: "",
                         });
                         setPreview(false);
                     }}
@@ -540,7 +552,8 @@ export default function Client({ auth, initialData }) {
                                                 optionValue="id"
                                                 filter
                                                 showClear
-                                                filterBy="name"
+                                               
+                                                filterFunction={UserFilter}
                                                 placeholder="Select a User"
                                             />
                                         )}
