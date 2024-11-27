@@ -32,6 +32,8 @@ export default function Client({ auth, initialData }) {
         handleDelete,
         zoneWise,
         users,
+        code,
+        resetForm,
     } = useClient(initialData, toast);
     const {
         control,
@@ -91,7 +93,8 @@ export default function Client({ auth, initialData }) {
     // Delete
     const dataDelete = async (id) => {
         if (!confirm("Are you sure you want to delete this?")) return;
-        await handleDelete(id);
+        let newCode = await handleDelete(id);
+        reset(resetForm({ code: newCode }));
     };
 
     // Insert or Update
@@ -100,24 +103,12 @@ export default function Client({ auth, initialData }) {
         for (const key in data) {
             formData.append(key, data[key]);
         }
-        await handleSave(formData);
+
+        let newCode = await handleSave(formData);
+
         if (!data.id) {
-            reset({
-                name: "",
-                code: "",
-                id: "",
-                number: "",
-                nid: "",
-                gender: "",
-                type: "",
-                district_id: "",
-                area_id: "",
-                zone_id: "",
-                store_name: "",
-                store_representative: "",
-                user_id: "",
-                address: "",
-            });
+            reset(resetForm({ code: newCode }));
+            setPreview(false);
         }
     };
 
@@ -143,7 +134,11 @@ export default function Client({ auth, initialData }) {
                     <DataTable
                         data={client}
                         addbuttom="Add Client"
-                        model={setModel}
+                        model={() => {
+                            setModel(true);
+                            reset(resetForm({ code: code }));
+                        }}
+                        // model={setModel}
                     >
                         <Column
                             field="name"
@@ -315,6 +310,7 @@ export default function Client({ auth, initialData }) {
                                         }}
                                         render={({ field, fieldState }) => (
                                             <InputText
+                                                readOnly={true}
                                                 id={field.name}
                                                 {...field}
                                                 className={classNames({

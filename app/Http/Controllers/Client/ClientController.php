@@ -24,6 +24,7 @@ class ClientController extends Controller
         $initialData['gender'] = gender();
         $initialData['zone'] = Zone::get();
         $initialData['data'] = Client::with('clientHierarchiesAttach')->orderByDesc('id')->get();
+        $initialData['code'] = generateCode('C', Client::class);
         $initialData['user'] = User::orderByDesc('id')->with(['designation' => function ($quarry) {
             $quarry->whereNot('level', 1);
         }])->get();
@@ -45,7 +46,9 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         ClientService::useStore(filterRequest());
-        return response()->json(['message' => 'Operation success', 'data' =>  Client::with('clientHierarchiesAttach')->orderByDesc('id')->get()]);
+        $initialData['code'] = generateCode('C', Client::class);
+        $initialData['client'] = Client::with('clientHierarchiesAttach')->orderByDesc('id')->get();
+        return response()->json(['message' => 'Operation success', 'data' =>  $initialData]);
     }
 
     /**
@@ -80,6 +83,8 @@ class ClientController extends Controller
         $user = Client::find($id);
         fileWithDataProcess($user, $user->profile_picture, 'profile_picture');
         $user->delete();
-        return response()->json(['message' => 'Operation success', 'data' => Client::with('clientHierarchiesAttach')->orderByDesc('id')->get()]);
+        $initialData['code'] = generateCode('C', Client::class);
+        $initialData['client'] = Client::with('clientHierarchiesAttach')->orderByDesc('id')->get();
+        return response()->json(['message' => 'Operation success', 'data' => $initialData]);
     }
 }

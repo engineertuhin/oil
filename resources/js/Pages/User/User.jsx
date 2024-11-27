@@ -105,7 +105,6 @@ export default function User({ auth, initialData }) {
         if (!confirm("Are you sure you want to delete this?")) return;
         await handleDelete(id);
         let newCode = await handleDelete(id);
-        setCode(newCode);
         reset(resetForm({ code: newCode }));
     };
 
@@ -118,12 +117,10 @@ export default function User({ auth, initialData }) {
         let newCode = await handleSave(formData);
 
         if (!data.id) {
-            setCode(newCode);
             reset(resetForm({ code: newCode }));
             setPreview(false);
         }
     };
-
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -139,6 +136,7 @@ export default function User({ auth, initialData }) {
                     ref={toast}
                     className="p-toast p-toast-sm text-sm p-2 rounded-md "
                 />
+                
                 <div className="card">
                     <DataTable
                         data={user}
@@ -149,7 +147,9 @@ export default function User({ auth, initialData }) {
                         }}
                     >
                         <Column
-                            field="name"
+                        body={(item)=>{
+                            return item.name+` (${item.designation.code})`;
+                        }}
                             header="Name"
                             alignHeader="center"
                             style={{ width: "14rem" }}
@@ -368,7 +368,7 @@ export default function User({ auth, initialData }) {
                                             "p-error": errors.code,
                                         })}
                                     >
-                                        Number
+                                        Phone Number
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "number")}
@@ -523,7 +523,7 @@ export default function User({ auth, initialData }) {
                                             "p-error": errors.join_date,
                                         })}
                                     >
-                                        Discontinued
+                                        Discontinued Date
                                     </label>
                                 </span>
                                 {getFormErrorMessage(errors, "discontinue")}
