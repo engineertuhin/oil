@@ -77,6 +77,11 @@ export default function Sidebar() {
                     routePath={"garage.index"}
                     active={route().current("garage.index")}
                 />
+                <NavChild
+                    label="Fleet"
+                    routePath={"fleet.index"}
+                    active={route().current("fleet.index")}
+                />
             </NavLink>
             <NavLink
                 label={"Report"}
