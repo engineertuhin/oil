@@ -552,7 +552,6 @@ export default function Client({ auth, initialData }) {
                                                 optionValue="id"
                                                 filter
                                                 showClear
-                                               
                                                 filterFunction={UserFilter}
                                                 placeholder="Select a User"
                                             />
