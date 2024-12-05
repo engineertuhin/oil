@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Client\ClientController;
-
 use App\Http\Controllers\Places\AreasController;
 use App\Http\Controllers\Places\DistrictController;
 use App\Http\Controllers\Places\PlaceController;
@@ -26,7 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('client', ClientController::class);
 
-
     Route::prefix('report')->group(function () {
         Route::get('organography', [ReportController::class, 'organography'])->name('organography');
     });
@@ -34,6 +32,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('get/area/{id}', [PlaceController::class, 'areaGet'])->name('getArea');
     Route::post('get/district/{ids}', [PlaceController::class, 'districtGet'])->name('getDistrict');
+    Route::post('get/client', [ClientController::class, 'clientGet'])->name('getClient');
+    Route::post('get/user/{id}', [ClientController::class, 'userGet'])->name('getUser');
 
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])

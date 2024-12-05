@@ -20,13 +20,17 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->string('store_name')->nullable();
             $table->string('store_representative')->nullable();
-            $table->string('user_id')->nullable();
-            $table->text('address')->nullable();
+            $table->string('client_hierarchies_id')->nullable();
+            $table->integer('user_id')->nullable();
+            $table->integer('client_id')->nullable();
+            $table->integer('garages_type_id')->nullable();
+            $table->integer('fleet_type_id')->nullable();
             $table->unsignedBigInteger('district_id')->nullable();
             $table->unsignedBigInteger('zone_id')->nullable();
             $table->unsignedBigInteger('area_id')->nullable();
             $table->string('profile_picture')->nullable();
-            $table->tinyInteger('is_active')->default(1)->comment('0: Inactive, 1: Active'); // Active/Inactive field
+            $table->tinyInteger('is_active')->default(1)->comment('0: Inactive, 1: Active');
+            $table->text('address')->nullable();
             $table->timestamps();
         });
     }

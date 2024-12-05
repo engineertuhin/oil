@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             EmployHierarchiesTableSeeder::class,
             ClientHierarchiesSeeder::class,
             GaragesSeeder::class,
+            FleetSeeder::class,
         ]);
     }
 }

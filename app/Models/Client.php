@@ -14,4 +14,11 @@ class Client extends Model
     {
         return $this->belongsToMany(ClientHierarchies::class, 'client_hierarchies_attaches', 'client_id', 'client_hierarchies_id');
     }
+
+    public function clientUser()
+    {
+        return $this->belongsToMany(User::class, 'client_user', 'client_id', 'user_id');
+    }
+    
+
 }

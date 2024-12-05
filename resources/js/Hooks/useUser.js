@@ -39,11 +39,11 @@ export const useUser = (initialData, toast) => {
 
     const getDistrict = async (ids) => {
         const res = await getDistrictService(JSON.stringify(ids));
-        setDistrict(res);
+        setDistrict(res.district);
     };
     const getArea = async (ids) => {
         const res = await getAreaService(JSON.stringify(ids));
-        setArea(res);
+        setArea(res.areas);
     };
     // Reset Data
     const resetForm = (form = {}) => {

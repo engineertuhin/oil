@@ -52,7 +52,7 @@ export default function Sidebar() {
                 />
             </NavLink>
             <NavLink
-                label={"Customer"}
+                label={"Global Customer Chain"}
                 active={route().current("client.index")}
                 icon="fa-solid fa-user-group"
             >
@@ -62,7 +62,7 @@ export default function Sidebar() {
                     active={route().current("client.index")}
                 />
             </NavLink>
-       
+
             <NavLink
                 label={"Report"}
                 active={route().current("organography")}

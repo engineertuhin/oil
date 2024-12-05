@@ -33,7 +33,14 @@ export default function Client({ auth, initialData }) {
         zoneWise,
         users,
         code,
+        status,
+        setStatus,
+        getClient,
         resetForm,
+        selectedClient,
+        getUser,
+        garage,
+        fleet,
     } = useClient(initialData, toast);
     const {
         control,
@@ -54,6 +61,7 @@ export default function Client({ auth, initialData }) {
                     onClick={() => {
                         getArea(rowData?.district_id);
                         getDistrict(rowData?.zone_id);
+                        console.log(rowData);
 
                         reset({
                             name: rowData.name || "",
@@ -66,15 +74,15 @@ export default function Client({ auth, initialData }) {
                                 rowData.store_representative || "",
                             user_id: Number(rowData.user_id) || "",
                             gender: rowData.gender || "",
-                            type:
-                                rowData.client_hierarchies_attach.map(
-                                    (item) => item.id
-                                ) || "",
+                            client_hierarchies_id: Number(
+                                rowData.client_hierarchies_id
+                            ),
                             district_id: rowData.district_id || "",
                             area_id: Number(rowData.area_id) || "",
                             zone_id: rowData.zone_id || "",
                             profile_picture: rowData.profile_picture || "",
                             address: rowData.address,
+                            user_id: rowData.client_user.map((e) => e.id),
                         });
                         setPreview(false);
                         setModel(true);
@@ -106,21 +114,23 @@ export default function Client({ auth, initialData }) {
 
         let newCode = await handleSave(formData);
 
-        if (!data.id) {
-            reset(resetForm({ code: newCode }));
-            setPreview(false);
-        }
+        // if (!data.id) {
+        //     reset(resetForm({ code: newCode }));
+        //     setPreview(false);
+        // }
     };
-
-    // User Filter
-    const UserFilter = (options, filter) => {
-        if (!filter) return options;
-
-        const filterValue = filter.toLowerCase();
-        return options.filter(
-            (option) =>
-                option.name.toLowerCase().includes(filterValue) ||
-                option.designation.name.toLowerCase().includes(filterValue)
+    // user option
+    const userOptionTemplate = (option) => {
+        return (
+            <div className="country-item">
+                <div className="flex items-center gap-2 text-sm">
+                    <h2>{option.name}</h2>
+                    <span>({option.code})</span>
+                </div>
+                <p className="text-xs text-black text-opacity-35">
+                    {option.hierarchies_name}
+                </p>
+            </div>
         );
     };
 
@@ -129,10 +139,10 @@ export default function Client({ auth, initialData }) {
             user={auth.user}
             header={
                 <>
-                    <h2 className="text-skin-header font-medium ">Client</h2>{" "}
+                    <h2 className="text-skin-header font-medium ">Customer</h2>{" "}
                     <p className="text-skin-sub-header text-xs">
                         {" "}
-                        Home - Client
+                        Home - Customer
                     </p>
                 </>
             }
@@ -145,7 +155,7 @@ export default function Client({ auth, initialData }) {
                 <div className="card">
                     <DataTable
                         data={client}
-                        addbuttom="Add Client"
+                        addbuttom="Add Customer"
                         model={() => {
                             setModel(true);
                             reset(resetForm({ code: code }));
@@ -189,12 +199,14 @@ export default function Client({ auth, initialData }) {
                         ></Column>
                     </DataTable>
                 </div>
+
+                {/* Model Start */}
                 <Model
                     style={{ width: "62rem" }}
                     breakpoints={{ "960px": "75vw", "641px": "90vw" }}
                     model={model}
                     setModel={setModel}
-                    title="Client Add"
+                    title="Customer Add"
                     resetData={() => {
                         reset({
                             name: "",
@@ -203,7 +215,7 @@ export default function Client({ auth, initialData }) {
                             number: "",
                             nid: "",
                             gender: "",
-                            type: "",
+                            client_hierarchies_id: "",
                             district_id: "",
                             area_id: "",
                             zone_id: "",
@@ -322,7 +334,6 @@ export default function Client({ auth, initialData }) {
                                         }}
                                         render={({ field, fieldState }) => (
                                             <InputText
-                                                readOnly={true}
                                                 id={field.name}
                                                 {...field}
                                                 className={classNames({
@@ -438,35 +449,6 @@ export default function Client({ auth, initialData }) {
                                 {getFormErrorMessage(errors, "gender")}
                             </div>
 
-                            {/* Store Field */}
-                            <div className="field col-span-4">
-                                <span className="p-float-label">
-                                    <Controller
-                                        name="store_name"
-                                        control={control}
-                                        render={({ field, fieldState }) => (
-                                            <InputText
-                                                id={field.name}
-                                                {...field}
-                                                className={classNames({
-                                                    "p-invalid":
-                                                        fieldState.invalid,
-                                                })}
-                                            />
-                                        )}
-                                    />
-                                    <label
-                                        htmlFor="store"
-                                        className={classNames({
-                                            "p-error": errors.nid,
-                                        })}
-                                    >
-                                        Store Name
-                                    </label>
-                                </span>
-                                {getFormErrorMessage(errors, "store_name")}
-                            </div>
-
                             {/* Store representative Field */}
                             <div className="field col-span-4">
                                 <span className="p-float-label">
@@ -499,77 +481,7 @@ export default function Client({ auth, initialData }) {
                                 )}
                             </div>
 
-                            {/* type Field */}
-                            <div className="field col-span-4">
-                                <span className="p-float-label">
-                                    <Controller
-                                        name="type"
-                                        control={control}
-                                        rules={{
-                                            required: "type is required.",
-                                        }}
-                                        render={({ field, fieldState }) => (
-                                            <MultiSelect
-                                                options={type}
-                                                {...field}
-                                                optionLabel="name"
-                                                optionValue="id"
-                                                filter
-                                                maxSelectedLabels={2}
-                                                placeholder="Select a type"
-                                            />
-                                        )}
-                                    />
-                                    <label
-                                        htmlFor="type"
-                                        className={classNames({
-                                            "p-error": errors.type,
-                                        })}
-                                    >
-                                        Type*
-                                    </label>
-                                </span>
-                                {getFormErrorMessage(errors, "type")}
-                            </div>
-
-                            {/* User Field */}
-                            <div className="field col-span-4">
-                                <span className="p-float-label">
-                                    <Controller
-                                        name="user_id"
-                                        control={control}
-                                        rules={{
-                                            required: "User is required.",
-                                        }}
-                                        render={({ field, fieldState }) => (
-                                            <Dropdown
-                                                options={users}
-                                                value={field.value}
-                                                onChange={(e) => {
-                                                    field.onChange(e.value);
-                                                }}
-                                                optionLabel="name"
-                                                optionValue="id"
-                                                filter
-                                                showClear
-                                                filterFunction={UserFilter}
-                                                placeholder="Select a User"
-                                            />
-                                        )}
-                                    />
-                                    <label
-                                        htmlFor="user"
-                                        className={classNames({
-                                            "p-error": errors.zone_id,
-                                        })}
-                                    >
-                                        User *
-                                    </label>
-                                </span>
-                                {getFormErrorMessage(errors, "user_id")}
-                            </div>
-
-                            {/*area  Field */}
+                            {/*Zone  Field */}
                             <div className="field col-span-4">
                                 <span className="p-float-label">
                                     <Controller
@@ -628,7 +540,7 @@ export default function Client({ auth, initialData }) {
                                                 optionValue="id"
                                                 filter
                                                 showClear
-                                                filterBy="name"
+                                                filterBy="name,id"
                                                 placeholder="Select a District"
                                             />
                                         )}
@@ -678,6 +590,227 @@ export default function Client({ auth, initialData }) {
                                 </span>
                                 {getFormErrorMessage(errors, "area_id")}
                             </div>
+
+                            {/* type Field */}
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="client_hierarchies_id"
+                                        control={control}
+                                        rules={{
+                                            required: "type is required.",
+                                        }}
+                                        render={({ field, fieldState }) => (
+                                            <Dropdown
+                                                options={type}
+                                                {...field}
+                                                value={field.value}
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                    setStatus(e.value);
+                                                    if (e.value > 3) {
+                                                        const fields = [
+                                                            "area_id",
+                                                            "district_id",
+                                                            "zone_id",
+                                                        ];
+                                                        const field =
+                                                            fields.find(
+                                                                (key) =>
+                                                                    watch(key)
+                                                                        .length !==
+                                                                    0
+                                                            );
+                                                        if (field) {
+                                                            getClient(
+                                                                field,
+                                                                watch(field)
+                                                            );
+                                                        }
+                                                    }
+                                                }}
+                                                optionLabel="name"
+                                                optionValue="id"
+                                                filter
+                                                maxSelectedLabels={2}
+                                                placeholder="Select a type"
+                                                selectionLimit={1}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="type"
+                                        className={classNames({
+                                            "p-error": errors.type,
+                                        })}
+                                    >
+                                        Type*
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "type")}
+                            </div>
+
+                            {/* Garage Type */}
+                            {status == 5 && (
+                                <div className="field col-span-4">
+                                    <span className="p-float-label">
+                                        <Controller
+                                            name="garage_id"
+                                            control={control}
+                                            render={({ field, fieldState }) => (
+                                                <Dropdown
+                                                    options={garage}
+                                                    value={field.value}
+                                                    onChange={(e) => {
+                                                        field.onChange(e.value);
+
+                                                       
+                                                    }}
+                                                    optionLabel="name"
+                                                    optionValue="id"
+                                                    filter
+                                                    showClear
+                                                    filterBy="name"
+                                                    placeholder="Select a Garage"
+                                                />
+                                            )}
+                                        />
+                                        <label
+                                            htmlFor="garage_id"
+                                            className={classNames({
+                                                "p-error": errors.zone_id,
+                                            })}
+                                        >
+                                            Garage Type
+                                        </label>
+                                    </span>
+                                    {getFormErrorMessage(errors, "garage_id")}
+                                </div>
+                            )}
+                            {/* Garage Type */}
+                            {status == 6 && (
+                                <div className="field col-span-4">
+                                    <span className="p-float-label">
+                                        <Controller
+                                            name="fleet_type_id"
+                                            control={control}
+                                            render={({ field, fieldState }) => (
+                                                <Dropdown
+                                                    options={fleet}
+                                                    value={field.value}
+                                                    onChange={(e) => {
+                                                        field.onChange(e.value);
+
+                                                       
+                                                    }}
+                                                    optionLabel="name"
+                                                    optionValue="id"
+                                                    filter
+                                                    showClear
+                                                    filterBy="name"
+                                                    placeholder="Select a Fleet"
+                                                />
+                                            )}
+                                        />
+                                        <label
+                                            htmlFor="fleet_type_id"
+                                            className={classNames({
+                                                "p-error": errors.zone_id,
+                                            })}
+                                        >
+                                            Fleet Type
+                                        </label>
+                                    </span>
+                                    {getFormErrorMessage(errors, "fleet_type_id")}
+                                </div>
+                            )}
+                            {/* Customer Field */}
+                            {status > 3 && (
+                                <div className="field col-span-4">
+                                    <span className="p-float-label">
+                                        <Controller
+                                            name="client_id"
+                                            control={control}
+                                            render={({ field, fieldState }) => (
+                                                <Dropdown
+                                                    options={selectedClient}
+                                                    value={field.value}
+                                                    onChange={(e) => {
+                                                        field.onChange(e.value);
+
+                                                        getUser(e.value);
+                                                    }}
+                                                    optionLabel="name"
+                                                    optionValue="id"
+                                                    filter
+                                                    showClear
+                                                    filterBy="name"
+                                                    placeholder="Select a Customer"
+                                                />
+                                            )}
+                                        />
+                                        <label
+                                            htmlFor="customer_id"
+                                            className={classNames({
+                                                "p-error": errors.zone_id,
+                                            })}
+                                        >
+                                            Customer
+                                        </label>
+                                    </span>
+                                    {getFormErrorMessage(errors, "customer_id")}
+                                </div>
+                            )}
+
+                            {/* User Field */}
+                            <div className="field col-span-4">
+                                <span className="p-float-label">
+                                    <Controller
+                                        name="user_id"
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <Controller
+                                                name="user_id"
+                                                control={control}
+                                                render={({
+                                                    field,
+                                                    fieldState,
+                                                }) => (
+                                                    <MultiSelect
+                                                        options={users}
+                                                        value={field.value}
+                                                        onChange={(e) => {
+                                                            field.onChange(
+                                                                e.value
+                                                            );
+                                                        }}
+                                                        optionLabel="name"
+                                                        optionValue="id"
+                                                        filter
+                                                        showClear
+                                                        filterBy="name,code"
+                                                        maxSelectedLabels={2}
+                                                        placeholder="Select a employer"
+                                                        itemTemplate={
+                                                            userOptionTemplate
+                                                        }
+                                                    />
+                                                )}
+                                            />
+                                        )}
+                                    />
+                                    <label
+                                        htmlFor="employer"
+                                        className={classNames({
+                                            "p-error": errors.zone_id,
+                                        })}
+                                    >
+                                        Employer
+                                    </label>
+                                </span>
+                                {getFormErrorMessage(errors, "user_id")}
+                            </div>
+
                             {/* Address Field */}
                             <div className="field col-span-12">
                                 <span className="p-float-label">

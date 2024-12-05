@@ -10,3 +10,14 @@ export const getDistrictService = async (ids) => {
     return response.data;
 };
 
+export const getClientService = async (key,value) => {
+    const response = await axios.post(route("getClient"), { key, value });
+    return response.data;
+};
+
+
+export const getUserService = async (id) => {
+
+    const response = await axios.post(route("getUser", id));
+    return response.data;
+};
